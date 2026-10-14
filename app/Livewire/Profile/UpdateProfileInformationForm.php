@@ -2,13 +2,12 @@
 
 namespace App\Livewire\Profile;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
-use App\Models\User;
 
 class UpdateProfileInformationForm extends Component
 {
@@ -44,13 +43,11 @@ class UpdateProfileInformationForm extends Component
 
     /**
      * Prepare the component.
-     *
-     * @return void
      */
-    public function mount()
+    public function mount(): void
     {
         $this->state = Auth::user()->withoutRelations()->toArray();
-        
+
         // Obtener direcciones únicas
         $this->uniqueDirections = User::whereNotNull('direction')
             ->where('direction', '!=', '')
@@ -59,7 +56,7 @@ class UpdateProfileInformationForm extends Component
             ->sort()
             ->values()
             ->toArray();
-        
+
         // Obtener puestos únicos
         $this->uniquePositions = User::whereNotNull('position')
             ->where('position', '!=', '')
@@ -72,11 +69,8 @@ class UpdateProfileInformationForm extends Component
 
     /**
      * Update the user's profile information.
-     *
-     * @param  \Laravel\Fortify\Contracts\UpdatesUserProfileInformation  $updater
-     * @return void
      */
-    public function updateProfileInformation(UpdatesUserProfileInformation $updater)
+    public function updateProfileInformation(UpdatesUserProfileInformation $updater): void
     {
         $this->resetErrorBag();
 
@@ -87,31 +81,19 @@ class UpdateProfileInformationForm extends Component
                 : $this->state
         );
 
-        if (isset($this->photo)) {
-            $this->photo = null;
-        }
-
-        // Guardar mensaje en session para mostrar en dashboard
-        session()->flash('profile_updated', 'Las actualizaciones de perfil fueron hechas satisfactoriamente.');
-        
-        // Redirigir al dashboard después de guardar
-        return redirect()->route('dashboard');
+        $this->photo = null;
+        $this->dispatch('saved');
+        $this->dispatch('refresh-navigation-menu');
     }
 
     /**
      * Delete user's profile photo.
-     *
-     * @return void
      */
-    public function deleteProfilePhoto()
+    public function deleteProfilePhoto(): void
     {
         Auth::user()->deleteProfilePhoto();
 
-        // Guardar mensaje en session para mostrar en dashboard
-        session()->flash('profile_updated', 'Foto de perfil eliminada correctamente.');
-        
-        // Redirigir al dashboard después de eliminar la foto
-        return redirect()->route('dashboard');
+        $this->dispatch('refresh-navigation-menu');
     }
 
     /**
@@ -119,18 +101,16 @@ class UpdateProfileInformationForm extends Component
      *
      * @return mixed
      */
-    public function getUserProperty()
+    public function getUserProperty(): User
     {
         return Auth::user();
     }
 
     /**
      * Render the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): View
     {
         return view('livewire.profile.update-profile-information-form');
     }
-} 
+}

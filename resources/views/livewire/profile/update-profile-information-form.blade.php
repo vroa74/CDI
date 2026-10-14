@@ -115,24 +115,20 @@
             <x-input-error for="lvl" class="mt-2" />
         </div>
 
-        <!-- Tipo -->
         <div class="col-span-6 sm:col-span-4">
             <x-label for="tipo" value="{{ __('Tipo de Usuario') }}" />
-            <select id="tipo" class="mt-1 block w-full border-gray-700 bg-gray-800 text-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" wire:model="state.tipo">
-                <option value="1">Administrador</option>
-                <option value="2">Supervisor</option>
-                <option value="3">Usuario</option>
+            <select id="tipo" class="mt-1 block w-full border-gray-700 bg-gray-800 text-gray-300 rounded-md shadow-sm opacity-75 cursor-not-allowed" disabled>
+                <option value="1" @selected((int) $this->user->tipo === 1)>Administrador</option>
+                <option value="2" @selected((int) $this->user->tipo === 2)>Supervisor</option>
+                <option value="3" @selected((int) $this->user->tipo === 3)>Usuario</option>
             </select>
-            <x-input-error for="tipo" class="mt-2" />
         </div>
 
-        <!-- Status -->
         <div class="col-span-6 sm:col-span-4">
-            <label class="flex items-center">
-                <input type="checkbox" class="rounded border-gray-700 bg-gray-800 text-indigo-600 shadow-sm focus:ring-indigo-500" wire:model="state.status">
+            <label for="status" class="flex items-center">
+                <input id="status" type="checkbox" class="rounded border-gray-700 bg-gray-800 text-indigo-600 shadow-sm opacity-75 cursor-not-allowed" @checked($this->user->status) disabled>
                 <span class="ml-2 text-sm text-gray-300">{{ __('Usuario Activo') }}</span>
             </label>
-            <x-input-error for="status" class="mt-2" />
         </div>
 
         <!-- Email -->
@@ -160,11 +156,9 @@
     </x-slot>
 
     <x-slot name="actions">
-        @if (session()->has('message'))
-            <div class="me-3">
-                <span class="text-green-600 text-sm font-medium">{{ session('message') }}</span>
-            </div>
-        @endif
+        <x-action-message class="me-3" on="saved">
+            {{ __('¡El perfil se guardó con éxito!') }}
+        </x-action-message>
 
         <x-button wire:loading.attr="disabled" wire:target="photo">
             {{ __('Guardar') }}

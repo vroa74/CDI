@@ -4,21 +4,24 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
     use HasApiTokens;
 
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -120,7 +123,7 @@ class User extends Authenticatable
      */
     public function allServices()
     {
-        return Service::where('solicitante_id', $this->id)            
+        return Service::where('solicitante_id', $this->id)
             ->orWhere('efectuo_id', $this->id)
             ->orWhere('vobo_id', $this->id)
             ->orWhere('capturo', $this->id);
@@ -173,6 +176,21 @@ class User extends Authenticatable
             get: fn ($value) => mb_convert_encoding($value, 'UTF-8', 'auto'),
             set: fn ($value) => mb_convert_encoding($value, 'UTF-8', 'auto')
         );
+    }
+
+    protected function profilePhotoUrl(): Attribute
+    {
+        return Attribute::get(function (): string {
+            if (! $this->hasProfilePhoto()) {
+                return $this->defaultProfilePhotoUrl();
+            }
+
+            if ($this->profilePhotoDisk() === 'public') {
+                return url('/storage/'.ltrim($this->profile_photo_path, '/'));
+            }
+
+            return Storage::disk($this->profilePhotoDisk())->url($this->profile_photo_path);
+        });
     }
 
     /**
@@ -229,24 +247,15 @@ class User extends Authenticatable
     /**
      * Check if the user has a profile photo.
      */
-    public function hasProfilePhoto()
+    public function hasProfilePhoto(): bool
     {
-        // Verificar si existe la ruta de la foto
         if (empty($this->profile_photo_path)) {
             return false;
         }
 
-        // Verificar si el archivo existe físicamente
-        $filePath = storage_path('app/public/' . $this->profile_photo_path);
-        if (!file_exists($filePath)) {
-            return false;
-        }
+        $disk = Storage::disk($this->profilePhotoDisk());
 
-        // Verificar que el archivo no esté vacío
-        if (filesize($filePath) === 0) {
-            return false;
-        }
-
-        return true;
+        return $disk->exists($this->profile_photo_path)
+            && $disk->size($this->profile_photo_path) > 0;
     }
 }

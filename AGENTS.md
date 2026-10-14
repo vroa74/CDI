@@ -56,6 +56,17 @@ Este proyecto tiene habilidades específicas de dominio disponibles en `**/skill
 
 - No crees scripts de verificación ni uses tinker cuando las pruebas cubran esa funcionalidad y demuestren que funciona. Las pruebas unitarias y de características son más importantes.
 
+## Protección de los datos de la base de datos (PRIORIDAD MÁXIMA)
+
+- Protege los datos de la base de datos a toda costa; esta regla prevalece sobre cualquier otra.
+- Nunca ejecutes comandos destructivos contra la base de datos real: `migrate:fresh`, `migrate:refresh`, `migrate:reset`, `db:wipe`, `db:seed` sobre datos existentes, `DROP`, `TRUNCATE` ni `DELETE`/`UPDATE` masivos o sin `WHERE`.
+- No modifiques ni borres usuarios, servicios, inventarios u otros registros existentes sin aprobación explícita del usuario.
+- Antes de cualquier cambio de datos o esquema, haz un respaldo y avisa al usuario.
+- Usa solo consultas de solo lectura por defecto.
+- Las pruebas deben correr únicamente con la base de datos de pruebas (SQLite `:memory:` de `phpunit.xml`), nunca con `RefreshDatabase` apuntando a MySQL real.
+- No restaures ni sobrescribas respaldos (`sql/`) sin confirmación explícita.
+- No cambies las credenciales ni la conexión de base de datos en `.env`.
+
 ## Estructura y arquitectura de la aplicación
 
 - Mantente en la estructura de directorios existente; no crees nuevas carpetas base sin aprobación.
