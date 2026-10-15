@@ -20,6 +20,3 @@ Dónde guardar la URL: solo existe en este chat y en tu gestor de contraseñas, 
 
 Producción: copia SYS_REF y SYS_SEG al .env del servidor. Si usas config:cache, vuelve a ejecutarlo.
 
-    
-+10
--6

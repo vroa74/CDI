@@ -35,9 +35,4 @@ return [
         ],
     ],
 
-    'killswitch' => [
-        'hash' => env('SYS_REF'),
-        'segment' => env('SYS_SEG'),
-    ],
-
 ];
