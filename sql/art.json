@@ -1,0 +1,13 @@
+
+{
+"Articulo": "LAPTOP",
+"NI": "5151-0801/C04602",
+"ID": "64",
+"NS": "SCD8518G20",
+"Marca": "HP",
+"Modelo": "PROBOOK 450 GS",
+"Usuario": {"nombre":"LUIS FERNANDO ALAYOLA MOO",
+            "puesto":"ANALISTA ESPECIALIZADO"},
+"Resguardante":{ "nombre":"LUIS FERNANDO ALAYOLA MOO",
+                "puesto":"ANALISTA ESPECIALIZADO"}
+}

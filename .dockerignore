@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env*
+.rr.yaml
+rr
+rr.exe
+cdix/
+sql/
+node_modules
+vendor
+tests
+pruebas
+database/*.sqlite
+bootstrap/cache/*.php
+public/hot
+storage/logs

@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    env_file:
+      - .env
+    environment:
+      OCTANE_SERVER: frankenphp
+      DB_HOST: ${DOCKER_DB_HOST:-host.docker.internal}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "${DOCKER_HTTP_PORT:-8000}:8000"
+    volumes:
+      - ./storage:/app/storage
+    command:
+      - "--workers=${OCTANE_WORKERS:-2}"
+      - "--max-requests=${OCTANE_MAX_REQUESTS:-500}"

@@ -56,7 +56,14 @@ por favor crea el crud de la migracion
 
 
 
+leeme ---------------------------------------------
 
+Verificaciones y pendientes
+El build final y la petición a /up funcionaron; los errores de permisos detectados durante las primeras pruebas quedaron corregidos.
+Las pruebas existentes siguen reportando fallos: en tests/, 3 fallos y 19 errores; en pruebas/, 2 fallos. No los atribuyo a Octane: incluyen problemas de fixtures, rutas y componentes señalados en la ejecución anterior.
+Composer continúa reportando 17 avisos de seguridad en seis dependencias existentes; no actualicé esas dependencias como parte de esta instalación.
+En esta validación Docker funcionó desde Windows, pero el comando docker no estuvo disponible en Debian WSL después del reinicio de Docker Desktop. Para usarlo desde esa distro, habrá que revisar su integración WSL.
+Conviene rotar y sanear las credenciales aparentemente reales de .env.example. Preservé los cambios ajenos a esta tarea, incluidos cdix/ y sql/art.json.
 
 
 

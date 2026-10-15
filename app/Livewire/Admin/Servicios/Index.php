@@ -5,10 +5,14 @@ namespace App\Livewire\Admin\Servicios;
 use App\Models\Service;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Index extends Component
 {
@@ -727,12 +731,79 @@ class Index extends Component
         ]);
     }
 
-    public function render()
+    public function exportServices(): StreamedResponse
+    {
+        abort_unless(Auth::check() && (int) Auth::user()->tipo !== 3, 403);
+
+        $services = $this->servicesQuery()->without(['capturo', 'photos']);
+        $filename = 'servicios_'.now()->format('Y-m-d_H-i-s').'.csv';
+
+        return response()->streamDownload(function () use ($services): void {
+            $file = fopen('php://output', 'w');
+
+            if ($file === false) {
+                throw new \RuntimeException('No fue posible iniciar la exportación de servicios.');
+            }
+
+            try {
+                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+                fputcsv($file, [
+                    'ID Servicio',
+                    'Servicio',
+                    'Código QR',
+                    'Fecha de servicio',
+                    'Solicitante',
+                    'Efectuó',
+                    'VºBº',
+                    'Objetivo de la solicitud',
+                    'Actividades realizadas',
+                    'Observaciones',
+                    'Estado',
+                ]);
+
+                $services->chunk(500, function (Collection $serviceBatch) use ($file): void {
+                    foreach ($serviceBatch as $service) {
+                        fputcsv($file, [
+                            $service->id,
+                            $this->safeCsvValue($service->id_s),
+                            $this->safeCsvValue(preg_replace('/[^0-9]/', '', (string) $service->id_s)),
+                            $service->F_serv?->format('d/m/Y') ?? 'N/A',
+                            $this->safeCsvValue($service->solicitante?->name ?? 'N/A'),
+                            $this->safeCsvValue($service->efectuo?->name ?? 'N/A'),
+                            $this->safeCsvValue($service->vobo?->name ?? 'N/A'),
+                            $this->safeCsvValue($this->plainText($service->obj_sol)),
+                            $this->safeCsvValue($this->plainText($service->actividades)),
+                            $this->safeCsvValue($this->plainText($service->observaciones)),
+                            $service->status ? 'Activo' : 'Inactivo',
+                        ]);
+                    }
+                });
+            } finally {
+                fclose($file);
+            }
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    private function safeCsvValue(?string $value): string
+    {
+        $value ??= '';
+
+        return preg_match('/^[\t\r ]*[=+\-@]/u', $value) === 1 ? "'".$value : $value;
+    }
+
+    private function plainText(?string $value): string
+    {
+        $plainText = html_entity_decode(strip_tags($value ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        return trim($plainText) !== '' ? trim($plainText) : 'N/A';
+    }
+
+    private function servicesQuery(): Builder
     {
         // Forzar recarga completa de relaciones y datos
         $authUser = Auth::user();
 
-        $services = Service::query()
+        return Service::query()
             ->with(['solicitante', 'efectuo', 'vobo', 'capturo', 'photos'])
             ->when(in_array((int) $authUser->lvl, [4, 5]) && (int) $authUser->tipo === 3, function ($query) use ($authUser) {
                 // Los usuarios (tipo 3) de nivel 4 o 5 solo ven servicios de su propia dirección
@@ -881,9 +952,12 @@ class Index extends Component
                     $query->where('id', '<=', $max);
                 }
             })
-            ->orderBy($this->orderBy, $this->orderDirection)
-            ->paginate($this->perPage);
+            ->orderBy($this->orderBy, $this->orderDirection);
+    }
 
+    public function render(): View
+    {
+        $services = $this->servicesQuery()->paginate($this->perPage);
         $users = User::orderBy('name')->get();
 
         return view('livewire.admin.servicios.index', [
