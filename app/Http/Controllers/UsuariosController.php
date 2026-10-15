@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Traits\DeviceDetectionTrait;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class UsuariosController extends Controller
@@ -21,6 +22,11 @@ class UsuariosController extends Controller
         } else {
             return redirect()->route('dashboard');
         }
+    }
+
+    public function authLogin(): View
+    {
+        return view('profile.auth-login');
     }
 
     /**

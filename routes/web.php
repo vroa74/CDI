@@ -61,6 +61,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     // GESTIÓN DE USUARIOS
     // ========================================================================
 
+    Route::get('/auth-login', [UsuariosController::class, 'authLogin'])
+        ->middleware('can:access-auth-login')
+        ->name('auth-login');
+
     Route::resource('usuarios', UsuariosController::class)->names('usuarios');
 
     // Componente Livewire de usuarios

@@ -12,6 +12,11 @@ class Index extends Component
 {
     use WithFileUploads, WithPagination;
 
+    public function boot(): void
+    {
+        abort_unless(auth()->user()?->can('manage-users'), 403);
+    }
+
     public $search = '';
 
     public $showModal = false;
