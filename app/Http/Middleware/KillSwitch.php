@@ -17,10 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class KillSwitch
 {
-    private const BLOCKED_MESSAGE = 'Este sistema es propiedad intelectual particular, por favor póngase en contacto con el ingeniero en software responsable del proyecto.';
-
-    private const RELEASED_MESSAGE = 'El sistema ha sido liberado.';
-
     public static function flagPath(): string
     {
         return storage_path('framework/cache/.sysref');
@@ -41,7 +37,7 @@ class KillSwitch
         }
 
         if (is_file(self::flagPath())) {
-            return response(self::BLOCKED_MESSAGE, 503, ['Retry-After' => '3600']);
+            return response(view('sys.estado', ['bloqueado' => true]), 503, ['Retry-After' => '3600']);
         }
 
         return $next($request);
@@ -58,9 +54,7 @@ class KillSwitch
             Log::warning('Kill-switch DESACTIVADO', ['ip' => $request->ip()]);
         }
 
-        $mensaje = is_file(self::flagPath()) ? self::BLOCKED_MESSAGE : self::RELEASED_MESSAGE;
-
-        return response($mensaje, 200, ['Cache-Control' => 'no-store']);
+        return response(view('sys.estado', ['bloqueado' => is_file(self::flagPath())]), 200, ['Cache-Control' => 'no-store']);
     }
 
     private function closeAllSessions(): void
