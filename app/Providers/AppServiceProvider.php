@@ -23,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::define('access-auth-login', fn (User $user): bool => $user->email === 'vroa74@gmail.com');
         Gate::define('manage-users', fn (User $user): bool => $user->tipo === 1 || $user->email === 'vroa74@gmail.com');
+        Gate::define('view-reports', fn (User $user): bool => $user->tipo === 1 || $user->email === 'vroa74@gmail.com');
     }
 }

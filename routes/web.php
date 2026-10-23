@@ -13,9 +13,11 @@ use App\Http\Controllers\SeguimientoSubreporteController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\NewPasswordController;
+use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // ============================================================================
@@ -24,32 +26,38 @@ Route::get('/', function () {
 
 // Rutas de Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->middleware('throttle:6,1')
+        ->name('password.email');
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+});
 
 // Rutas de Registro (DESHABILITADAS)
 // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 // Route::post('/register', [RegisterController::class, 'register']);
 
 // ============================================================================
-// RUTAS DE REPORTES PDF (PÚBLICAS PARA PRUEBAS)
-// ============================================================================
-
-// Reporte individual de servicio
-Route::get('/service-pdf/{id}', [ServiceController::class, 'generatePdf'])->name('service.pdf');
-Route::get('/service-cal-pdf/{id}', [ServiceController::class, 'generatePdfCal'])->name('service.pdf.cal');
-
-// Reporte detallado de servicio
-Route::get('/service-details-pdf/{id}', [ServiceController::class, 'generateDetailsPdf'])->name('service.details.pdf');
-
-// Reporte individual de inventario
-Route::get('/inventory-pdf/{id}', [InventoryController::class, 'generatePdf'])->name('inventory.pdf');
-
-// ============================================================================
 // RUTAS PROTEGIDAS (REQUIEREN AUTENTICACIÓN)
 // ============================================================================
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+
+    // =========================================================================
+    // REPORTES PDF
+    // =========================================================================
+
+    Route::middleware('can:view-reports')->group(function () {
+        Route::get('/service-pdf/{id}', [ServiceController::class, 'generatePdf'])->name('service.pdf');
+        Route::get('/service-cal-pdf/{id}', [ServiceController::class, 'generatePdfCal'])->name('service.pdf.cal');
+        Route::get('/service-details-pdf/{id}', [ServiceController::class, 'generateDetailsPdf'])->name('service.details.pdf');
+        Route::get('/inventory-pdf/{id}', [InventoryController::class, 'generatePdf'])->name('inventory.pdf');
+    });
 
     // ========================================================================
     // DASHBOARD
