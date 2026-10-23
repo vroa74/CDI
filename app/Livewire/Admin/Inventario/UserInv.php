@@ -23,7 +23,6 @@ class UserInv extends Component
     {
         $this->resetPage('usersPage');
         $this->resetPage('inventoryPage');
-        $this->emitSelf('refresh'); // Fuerza el refresco del componente
     }
 
     public function render()

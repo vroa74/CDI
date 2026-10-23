@@ -30,6 +30,8 @@ class Index extends Component
 
     public $rfc = '';
 
+    public $curp = '';
+
     public $direction = '';
 
     public $position = '';
@@ -74,6 +76,7 @@ class Index extends Component
     protected $rules = [
         'name' => 'required|string|max:255',
         'rfc' => 'nullable|string|max:13|unique:users,rfc',
+        'curp' => 'required|string|min:8|max:18|unique:users,curp',
         'direction' => 'nullable|string|max:250',
         'position' => 'nullable|string|max:35',
         'sex' => 'nullable|in:masculino,femenino',
@@ -87,6 +90,10 @@ class Index extends Component
 
     protected $messages = [
         'name.required' => 'El nombre es obligatorio',
+        'curp.required' => 'La CURP es obligatoria',
+        'curp.min' => 'La CURP debe tener al menos 8 caracteres',
+        'curp.max' => 'La CURP no puede tener más de 18 caracteres',
+        'curp.unique' => 'La CURP ya está registrada',
         'email.required' => 'El email es obligatorio',
         'email.email' => 'El email debe ser válido',
         'email.unique' => 'El email ya está registrado',
@@ -147,6 +154,7 @@ class Index extends Component
         $this->userId = $user->id;
         $this->name = $user->name;
         $this->rfc = $user->rfc;
+        $this->curp = $user->curp;
         $this->direction = $user->direction;
         $this->position = $user->position;
         $this->sex = $user->sex;
@@ -169,6 +177,7 @@ class Index extends Component
         if ($this->editing) {
             $this->rules['email'] = 'required|email|unique:users,email,'.$this->userId;
             $this->rules['rfc'] = 'nullable|string|max:13|unique:users,rfc,'.$this->userId;
+            $this->rules['curp'] = 'required|string|min:8|max:18|unique:users,curp,'.$this->userId;
             $this->rules['password'] = 'nullable|min:8|confirmed';
         } else {
             $this->rules['password'] = 'required|min:8|confirmed';
@@ -176,7 +185,7 @@ class Index extends Component
 
         $this->validate();
 
-        $validatedData = $this->only(['name', 'rfc', 'direction', 'position', 'sex', 'lvl', 'tipo', 'email']);
+        $validatedData = $this->only(['name', 'rfc', 'curp', 'direction', 'position', 'sex', 'lvl', 'tipo', 'email']);
         $validatedData['status'] = $this->status ? 1 : 0;
 
         if ($this->password) {
@@ -262,6 +271,7 @@ class Index extends Component
         $this->userId = null;
         $this->name = '';
         $this->rfc = '';
+        $this->curp = '';
         $this->direction = '';
         $this->position = '';
         $this->sex = '';
@@ -284,6 +294,7 @@ class Index extends Component
                     $q->where('name', 'like', '%'.$this->search.'%')
                         ->orWhere('email', 'like', '%'.$this->search.'%')
                         ->orWhere('rfc', 'like', '%'.$this->search.'%')
+                        ->orWhere('curp', 'like', '%'.$this->search.'%')
                         ->orWhere('direction', 'like', '%'.$this->search.'%')
                         ->orWhere('position', 'like', '%'.$this->search.'%')
                         ->orWhere('sex', 'like', '%'.$this->search.'%')

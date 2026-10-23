@@ -201,33 +201,31 @@
     </div>
 </div>
 
-@push('scripts')
+@script
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        window.livewire.on('swal:confirm-asignacion-resguardante', function (data) {
-            Swal.fire({
-                title: '¿Asignar resguardante?',
-                text: 'Se actualizarán los campos user_id y res_id de los registros filtrados en inventario. ¿Deseas continuar?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, aplicar cambios',
-                cancelButtonText: 'No, cancelar',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.livewire.emit('asignarResguardante');
-                } else {
-                    window.livewire.emit('asignacionResguardanteCancelada');
-                }
-            });
+    Livewire.on('swal:confirm-asignacion-resguardante', function () {
+        Swal.fire({
+            title: '¿Asignar resguardante?',
+            text: 'Se actualizarán los campos user_id y res_id de los registros filtrados en inventario. ¿Deseas continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, aplicar cambios',
+            cancelButtonText: 'No, cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('asignarResguardante');
+            } else {
+                Livewire.dispatch('asignacionResguardanteCancelada');
+            }
         });
-        window.livewire.on('swal:mensaje', function (data) {
-            Swal.fire({
-                title: data.titulo,
-                text: data.mensaje,
-                icon: data.tipo || 'info',
-                confirmButtonText: 'OK'
-            });
+    });
+    Livewire.on('swal:mensaje', function (data) {
+        Swal.fire({
+            title: data.titulo,
+            text: data.mensaje,
+            icon: data.tipo || 'info',
+            confirmButtonText: 'OK'
         });
     });
 </script>
-@endpush 
+@endscript

@@ -49,6 +49,8 @@ Este proyecto tiene habilidades específicas de dominio disponibles en `**/skill
 - Modelos y base de datos: respeta los nombres de columnas heredadas existentes (incluyendo `snake_case` y campos legacy como `id_s`, `F_serv`), sin renombrar campos salvo solicitud explícita.
 - Blade: prioriza componentes reutilizables (`x-...`) antes de duplicar bloques; conserva estructuras existentes de layout y slots.
 - Estilos: usa Tailwind CSS como primera opción, manteniendo coherencia visual con la paleta y patrones ya presentes en cada módulo.
+- Coherencia visual: conserva el mismo estilo visual en todo el proyecto; reutiliza los patrones existentes en lugar de inventar variantes.
+- Campos de contraseña: todo input de contraseña debe incluir el botón de mostrar/ocultar con el estilo del login (icono de ojo SVG, `text-gray-400 hover:text-gray-600`, posicionado a la derecha). En Livewire/Blade usa el componente `<x-password-toggle-button />` dentro de un contenedor `relative` con `x-data="{ show: false }"` y `x-bind:type="show ? 'text' : 'password'"` en el input.
 - Mensajes de sesión: conserva claves estándar observadas (`message`, `error`) y textos claros en español.
 - Comentarios: usa comentarios breves y útiles, preferentemente en español, solo cuando aporten contexto no obvio.
 

@@ -407,8 +407,8 @@
 
                 <div class="max-h-[70vh] overflow-y-auto">
                 <form wire:submit.prevent="saveUser" class="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                    <!-- Primera fila: Nombre, Email, RFC -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Primera fila: Nombre, Email, RFC, CURP -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-300 mb-2">
                                 Nombre completo *
@@ -450,6 +450,21 @@
                                 placeholder="Ingrese el RFC (opcional)"
                             >
                             @error('rfc') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="curp" class="block text-sm font-medium text-gray-300 mb-2">
+                                CURP *
+                            </label>
+                            <input
+                                wire:model="curp"
+                                type="text"
+                                id="curp"
+                                maxlength="18"
+                                class="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                                placeholder="Ingrese la CURP"
+                            >
+                            @error('curp') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -664,13 +679,17 @@
                                 <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
                                     Contraseña *
                                 </label>
+                                <div class="relative" x-data="{ show: false }">
                                 <input 
                                     wire:model="password"
+                                    x-bind:type="show ? 'text' : 'password'"
                                     type="password" 
                                     id="password"
-                                    class="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                                    class="w-full px-3 py-3 pr-12 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                                     placeholder="Mínimo 8 caracteres"
                                 >
+                                <x-password-toggle-button />
+                                </div>
                                 @error('password') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
                             </div>
 
@@ -678,13 +697,17 @@
                                 <label for="password_confirmation" class="block text-sm font-medium text-gray-300 mb-2">
                                     Confirmar Contraseña *
                                 </label>
+                                <div class="relative" x-data="{ show: false }">
                                 <input 
                                     wire:model="password_confirmation"
+                                    x-bind:type="show ? 'text' : 'password'"
                                     type="password" 
                                     id="password_confirmation"
-                                    class="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                                    class="w-full px-3 py-3 pr-12 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                                     placeholder="Confirme la contraseña"
                                 >
+                                <x-password-toggle-button />
+                                </div>
                             </div>
                         </div>
                     @else
@@ -693,13 +716,17 @@
                                 <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
                                     Nueva Contraseña (opcional)
                                 </label>
+                                <div class="relative" x-data="{ show: false }">
                                 <input 
                                     wire:model="password"
+                                    x-bind:type="show ? 'text' : 'password'"
                                     type="password" 
                                     id="password"
-                                    class="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                                    class="w-full px-3 py-3 pr-12 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                                     placeholder="Dejar vacío para mantener"
                                 >
+                                <x-password-toggle-button />
+                                </div>
                                 @error('password') <span class="text-red-400 text-sm">{{ $message }}</span> @enderror
                             </div>
 
@@ -707,13 +734,17 @@
                                 <label for="password_confirmation" class="block text-sm font-medium text-gray-300 mb-2">
                                     Confirmar Nueva Contraseña
                                 </label>
+                                <div class="relative" x-data="{ show: false }">
                                 <input 
                                     wire:model="password_confirmation"
+                                    x-bind:type="show ? 'text' : 'password'"
                                     type="password" 
                                     id="password_confirmation"
-                                    class="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+                                    class="w-full px-3 py-3 pr-12 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
                                     placeholder="Confirme la nueva contraseña"
                                 >
+                                <x-password-toggle-button />
+                                </div>
                             </div>
                         </div>
                     @endif

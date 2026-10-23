@@ -90,3 +90,71 @@ test('campo nivel tiene valor por defecto 1 en el formulario y se carga al edita
         ->call('editUser', $admin->id)
         ->assertSet('lvl', '12');
 });
+
+test('se puede crear un usuario con una CURP obligatoria de 18 caracteres', function () {
+    $admin = User::factory()->create([
+        'curp' => 'TEST123456ADM001',
+        'tipo' => 1,
+    ]);
+
+    $this->actingAs($admin);
+
+    Livewire::test(Index::class)
+        ->call('openModal')
+        ->set('name', 'Usuario nuevo')
+        ->set('email', 'usuario.nuevo@example.com')
+        ->set('curp', 'TEST123456HDFABC01')
+        ->set('password', 'password-segura')
+        ->set('password_confirmation', 'password-segura')
+        ->call('saveUser')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('users', [
+        'email' => 'usuario.nuevo@example.com',
+        'curp' => 'TEST123456HDFABC01',
+    ]);
+});
+
+test('no permite crear un usuario sin CURP', function () {
+    $admin = User::factory()->create([
+        'curp' => 'TEST123456ADM002',
+        'tipo' => 1,
+    ]);
+
+    $this->actingAs($admin);
+
+    Livewire::test(Index::class)
+        ->call('openModal')
+        ->set('name', 'Usuario sin CURP')
+        ->set('email', 'usuario.sin.curp@example.com')
+        ->set('password', 'password-segura')
+        ->set('password_confirmation', 'password-segura')
+        ->call('saveUser')
+        ->assertHasErrors(['curp' => 'required']);
+
+    $this->assertDatabaseMissing('users', [
+        'email' => 'usuario.sin.curp@example.com',
+    ]);
+});
+
+test('la CURP exige minimo 8 caracteres y la vista incluye boton para revelar contrasena', function () {
+    $admin = User::factory()->create(['curp' => 'TEST123456ADM003', 'tipo' => 1]);
+    $this->actingAs($admin);
+
+    Livewire::test(Index::class)
+        ->call('openModal')
+        ->set('name', 'Corto')
+        ->set('email', 'corto@example.com')
+        ->set('curp', 'ABC1234')
+        ->set('password', 'password-segura')
+        ->set('password_confirmation', 'password-segura')
+        ->call('saveUser')
+        ->assertHasErrors(['curp' => 'min'])
+        ->set('curp', 'ABC12345')
+        ->call('saveUser')
+        ->assertHasNoErrors();
+
+    Livewire::test(Index::class)
+        ->call('openModal')
+        ->assertSeeHtml('Mostrar contraseña');
+});
