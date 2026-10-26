@@ -25,6 +25,20 @@ test('componentes livewire admin servicios se pueden renderizar', function () {
         ->assertStatus(200);
 });
 
+test('genera automáticamente el ID del servicio al abrir el formulario', function () {
+    $user = User::factory()->create([
+        'curp' => 'TEST123456TEST10B',
+        'tipo' => 1,
+    ]);
+
+    $this->actingAs($user);
+
+    $component = Livewire::test(Create::class);
+
+    expect($component->get('id_s'))
+        ->toMatch('/^\d{4}-\d{2}-\d{2}\/\d{2}:\d{2}:\d{2}$/');
+});
+
 test('ruta servicios index carga la vista admin.servicios.index', function () {
     $user = User::factory()->create([
         'curp' => 'TEST123456TEST11',

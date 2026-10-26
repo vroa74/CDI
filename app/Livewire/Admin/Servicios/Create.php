@@ -941,6 +941,10 @@ class Create extends Component
 
     public function saveService()
     {
+        if (blank($this->id_s)) {
+            $this->id_s = now()->format('Y-m-d/H:i:s');
+        }
+
         $this->validate();
 
         // Validación personalizada: al menos una vía de solicitud

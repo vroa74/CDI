@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\ServiceFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Service extends Model
 {
-    /** @use HasFactory<\Database\Factories\ServiceFactory> */
+    /** @use HasFactory<ServiceFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -58,6 +56,15 @@ class Service extends Model
     ];
 
     protected $with = ['solicitante', 'efectuo', 'vobo', 'capturo'];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Service $service): void {
+            if (blank($service->id_s)) {
+                $service->id_s = now()->format('Y-m-d/H:i:s');
+            }
+        });
+    }
 
     // Relaciones con usuarios
 
@@ -115,8 +122,8 @@ class Service extends Model
     public function inventories()
     {
         return $this->belongsToMany(Inventory::class, 'service_inventory')
-                    ->withPivot(['user_id', 'service_date'])
-                    ->withTimestamps();
+            ->withPivot(['user_id', 'service_date'])
+            ->withTimestamps();
     }
 
     protected function actividades(): Attribute
