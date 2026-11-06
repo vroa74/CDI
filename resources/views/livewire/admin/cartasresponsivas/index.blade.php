@@ -159,13 +159,13 @@
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @forelse($responsivas as $responsiva)
                         <tr class="hover:bg-gray-700 transition-colors">
-                            <td data-label="Código @endif" class="px-6 py-4 whitespace-normal">
+                            <td data-label="Código" class="px-6 py-4 whitespace-normal">
                                 <div class="text-sm font-medium text-white">{{ $responsiva->codigo }}</div>
                                 @if($responsiva->observacion)
                                     <div class="text-xs text-gray-400 mt-1">{{ Str::limit($responsiva->observacion, 50) }}</div>
                                 @endif
                             </td>
-                            <td data-label="Fecha @endif" class="px-6 py-4 whitespace-normal text-sm text-gray-300">
+                            <td data-label="Fecha" class="px-6 py-4 whitespace-normal text-sm text-gray-300">
                                 {{ $responsiva->fecha ? $responsiva->fecha->format('d/m/Y') : 'N/A' }}
                             </td>
                             <td data-label="Usuario" class="px-6 py-4 whitespace-normal">

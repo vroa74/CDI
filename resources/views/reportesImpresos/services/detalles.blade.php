@@ -248,7 +248,7 @@
             <table>
                 <tr>
                     <td><strong>Mantenimiento:</strong></td>
-                    <td>{!! $service->mantenimiento !!}</td>
+                    <td><x-service-text :value="$service->mantenimiento" /></td>
                 </tr>
             </table>
             @endif

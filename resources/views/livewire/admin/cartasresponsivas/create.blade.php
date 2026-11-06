@@ -20,7 +20,6 @@
                         <label class="block text-gray-200 mb-1">Usuario que genera la carta</label>
                         <select wire:model="user_id" class="w-full rounded p-2 bg-gray-900 text-gray-100">
                             <option value="">Seleccione...</option>
-                            <option value="null">Sin usuario</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
@@ -31,7 +30,7 @@
                         <label class="block text-gray-200 mb-1">Responsable</label>
                         <select wire:model="responsable_id" class="w-full rounded p-2 bg-gray-900 text-gray-100">
                             <option value="">Seleccione...</option>
-                            @foreach($users as $user)
+                            @foreach($this->usersForTarget('responsable_id') as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
@@ -41,7 +40,7 @@
                         <label class="block text-gray-200 mb-1">Informática</label>
                         <select wire:model="informatica_id" class="w-full rounded p-2 bg-gray-900 text-gray-100">
                             <option value="">Seleccione...</option>
-                            @foreach($users as $user)
+                            @foreach($this->usersForTarget('informatica_id') as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
@@ -49,7 +48,7 @@
                     </div>
                     <div>
                         <label class="block text-gray-200 mb-1">Fecha</label>
-                        <input type="date" wire:model="fecha" class="w-full rounded p-2 bg-gray-900 text-gray-100" value="{{ now()->format('Y-m-d') }}" disabled>
+                        <input type="date" wire:model="fecha" class="w-full rounded p-2 bg-gray-900 text-gray-100" disabled>
                         @error('fecha') <span class="text-red-400 text-xs">{{ $message }}</span> @enderror
                     </div>
                     <div>
@@ -62,7 +61,7 @@
                         <label for="auditoria" class="text-gray-200">Auditoría</label>
                     </div>
                     <div>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Guardar</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">{{ $responsivaId ? 'Actualizar carta' : 'Guardar' }}</button>
                     </div>
                 </form>
             </div>

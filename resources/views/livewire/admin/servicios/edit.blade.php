@@ -1304,10 +1304,11 @@
                 }`;
                 notification.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <span>${message}</span>
+                        <span data-notification-message></span>
                         <button onclick="this.parentElement.parentElement.remove()" class="ml-2">×</button>
                     </div>
                 `;
+                notification.querySelector('[data-notification-message]').textContent = message;
                 document.body.appendChild(notification);
                 
                 // Auto-remover después de 5 segundos

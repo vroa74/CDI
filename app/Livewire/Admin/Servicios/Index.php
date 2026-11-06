@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -240,6 +241,8 @@ class Index extends Component
 
     public function toggleStatus($serviceId)
     {
+        Gate::authorize('manage-services');
+
         $service = Service::find($serviceId);
         $service->update(['status' => ! $service->status]);
         session()->flash('message', 'Estado del servicio actualizado.');

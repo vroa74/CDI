@@ -516,7 +516,7 @@
                         <td>
                             <div class="box">
                                 <span class="font-bold ml-5 text-sm">OBJETIVO DE LA SOLICITUD :</span> <br>
-                                <span class="text-xs">{!! $service->obj_sol ?? 'N/A' !!}</span>
+                                <span class="text-xs"><x-service-text :value="$service->obj_sol" /></span>
                             </div>
                         </td>
                     </tr>
@@ -649,7 +649,7 @@
                                     <span class="font-bold ml-5 text-sm"> Actividades Realizadas </span>
                                 </div><br>
                                 <span  class="text-11px text-justify">
-                                    {!! $service->actividades ?? 'N/A' !!}
+                                    <x-service-text :value="$service->actividades" />
                                 </span>
                             </div>
                         </td>
@@ -660,7 +660,7 @@
                                     <span class="font-bold ml-5 text-sm"> Observaciones </span>
                                 </div> <br>
                                 <span class="text-11px text-justify">
-                                    {!! $service->observaciones ?? 'N/A' !!}
+                                    <x-service-text :value="$service->observaciones" />
                                 </span>
                             </div>
                         </td>

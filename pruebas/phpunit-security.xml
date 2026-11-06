@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="../vendor/autoload.php" colors="true" cacheResult="false">
+    <testsuites>
+        <testsuite name="Seguridad sin base de datos">
+            <file>ServiceSecurityUnitTest.php</file>
+            <file>BladeSyntaxUnitTest.php</file>
+            <file>ResponsivaUsersUnitTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -6,10 +6,13 @@ use App\Models\Inventory;
 use App\Models\Service;
 use App\Models\ServicePhoto;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -178,6 +181,7 @@ class Create extends Component
     public $inventoryParam5 = null;
 
     // --- INICIO: Propiedades para Fotos ---=================================================
+    #[Locked]
     public $servicePhotos = [];
 
     public $photoDescriptions = [];
@@ -199,6 +203,7 @@ class Create extends Component
     public $editingPhotoIndex = null;
 
     // Track temporary photos for cleanup
+    #[Locked]
     public $temporaryPhotos = [];
 
     // --- INICIO: Propiedades para Inventarios ---=================================================
@@ -423,6 +428,8 @@ class Create extends Component
 
     public function addPhoto()
     {
+        Gate::authorize('manage-services');
+
         try {
             // Validación más específica
             $this->validate([
@@ -525,6 +532,8 @@ class Create extends Component
 
     public function deletePhoto($index)
     {
+        Gate::authorize('manage-services');
+
         if (isset($this->servicePhotos[$index])) {
             $photo = $this->servicePhotos[$index];
 
@@ -549,16 +558,13 @@ class Create extends Component
 
     public function deletePhotoFromDatabase($photoId)
     {
-        $photo = ServicePhoto::find($photoId);
-        if ($photo) {
-            Storage::disk('public')->delete($photo->photo_path);
-            $photo->delete();
-            session()->flash('message', 'Foto eliminada correctamente.');
-        }
+        throw new AuthorizationException('No se pueden eliminar fotos existentes desde un servicio nuevo.');
     }
 
     public function savePhotoDescriptionEdit()
     {
+        Gate::authorize('manage-services');
+
         try {
             if ($this->editingPhotoIndex !== null) {
                 Log::info('Iniciando savePhotoDescriptionEdit', [
@@ -941,6 +947,8 @@ class Create extends Component
 
     public function saveService()
     {
+        Gate::authorize('manage-services');
+
         if (blank($this->id_s)) {
             $this->id_s = now()->format('Y-m-d/H:i:s');
         }
@@ -1072,6 +1080,8 @@ class Create extends Component
 
     public function cleanupTemporaryPhotos()
     {
+        Gate::authorize('manage-services');
+
         // SOLO limpiar fotos temporales que no se guardaron exitosamente
         // NO eliminar fotos que ya están en el array servicePhotos
         foreach ($this->temporaryPhotos as $photoPath) {

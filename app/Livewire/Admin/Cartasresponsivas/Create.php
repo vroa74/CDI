@@ -4,11 +4,17 @@ namespace App\Livewire\Admin\Cartasresponsivas;
 
 use App\Models\Inventory;
 use App\Models\InventoryPhoto;
-use App\Models\InventoryResponsiva;
 use App\Models\Responsiva;
 use App\Models\User;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -20,6 +26,9 @@ class Create extends Component
     protected $listeners = ['refreshComponent' => '$refresh'];
 
     public $user_id;
+
+    #[Locked]
+    public ?int $responsivaId = null;
 
     public $responsable_id;
 
@@ -35,6 +44,7 @@ class Create extends Component
 
     public $inventories;
 
+    #[Locked]
     public $selected_inventories = [];
 
     // Modal de inventarios
@@ -89,13 +99,45 @@ class Create extends Component
         'selected_inventories.*' => 'exists:inventories,id',
     ];
 
-    public function mount()
+    public function mount(?int $id = null): void
     {
-        $this->users = User::where('status', true)->orderBy('name')->get();
+        $this->users = User::orderBy('name')->get();
         $this->inventories = Inventory::where('status', true)->orderBy('id', 'desc')->get();
         $this->filteredInventories = $this->inventories;
         $this->fecha = now()->format('Y-m-d');
         $this->codigo = 'CR/'.now()->format('Ymd/His');
+
+        if ($id !== null) {
+            Gate::authorize('manage-inventory-photos');
+            $responsiva = Responsiva::with('inventoryResponsivas')->findOrFail($id);
+            $this->responsivaId = $responsiva->id;
+            $this->user_id = $responsiva->user_id;
+            $this->responsable_id = $responsiva->responsable_id;
+            $this->informatica_id = $responsiva->informatica_id;
+            $this->fecha = $responsiva->fecha?->format('Y-m-d');
+            $this->codigo = $responsiva->codigo;
+            $this->auditoria = $responsiva->auditoria;
+            $this->selected_inventories = $responsiva->inventoryResponsivas->pluck('inventory_id')->all();
+            $this->inventoryDescriptions = $responsiva->inventoryResponsivas->pluck('description', 'inventory_id')->all();
+            $this->openPhotoAccordion = array_fill_keys($this->selected_inventories, true);
+        }
+    }
+
+    public static function userMatchesTarget(User $user, string $target): bool
+    {
+        $direction = Str::upper(Str::squish(Str::ascii($user->direction ?? '')));
+
+        return match ($target) {
+            'user_id' => true,
+            'responsable_id' => $direction === 'ORGANO INTERNO DE CONTROL',
+            'informatica_id' => $direction === 'DIRECCION DE INFORMATICA',
+            default => false,
+        };
+    }
+
+    public function usersForTarget(string $target): Collection
+    {
+        return collect($this->users)->filter(fn (User $user): bool => self::userMatchesTarget($user, $target));
     }
 
     public function openInventoryModal()
@@ -193,6 +235,8 @@ class Create extends Component
 
     public function addPhoto($inventoryId)
     {
+        $this->authorizeInventoryPhotoAction((int) $inventoryId);
+
         $this->validate([
             'photo.'.$inventoryId => 'required|image|max:2048',
             'photoDescription.'.$inventoryId => 'nullable|string|max:255',
@@ -215,9 +259,17 @@ class Create extends Component
         $this->showAddPhotoForm[$inventoryId] = true;
     }
 
+    private function authorizeInventoryPhotoAction(int $inventoryId): void
+    {
+        Gate::authorize('manage-inventory-photos');
+        abort_unless(in_array($inventoryId, array_map('intval', $this->selected_inventories), true), 403);
+    }
+
     public function deletePhoto($photoId)
     {
-        $photo = InventoryPhoto::find($photoId);
+        Gate::authorize('manage-inventory-photos');
+
+        $photo = InventoryPhoto::whereIn('inventory_id', $this->selected_inventories)->findOrFail($photoId);
         if ($photo) {
             Storage::disk('public')->delete($photo->path);
             $photo->delete();
@@ -261,6 +313,8 @@ class Create extends Component
 
     public function openPhotoForm($inventoryId)
     {
+        $this->authorizeInventoryPhotoAction((int) $inventoryId);
+
         $this->activePhotoFormId = $inventoryId;
         $this->modalPhoto[$inventoryId] = null;
         $this->modalPhotoPreview[$inventoryId] = null;
@@ -274,6 +328,8 @@ class Create extends Component
 
     public function savePhotoFromModal($inventoryId)
     {
+        $this->authorizeInventoryPhotoAction((int) $inventoryId);
+
         $this->validate([
             'modalPhoto.'.$inventoryId => 'required|image|max:2048',
             'modalPhotoDescription.'.$inventoryId => 'nullable|string|max:255',
@@ -312,19 +368,16 @@ class Create extends Component
 
     public function updateUserModalList()
     {
-        $query = User::where('status', true);
-        if (! empty($this->userModalFilter)) {
-            $search = strtolower($this->userModalFilter);
-            $query->whereRaw('LOWER(name) LIKE ?', ['%'.$search.'%'])
-                ->orWhereRaw('LOWER(email) LIKE ?', ['%'.$search.'%']);
-        }
-        $this->userModalList = $query->orderBy('name')->limit(20)->get();
+        $search = Str::lower(trim($this->userModalFilter));
+        $this->userModalList = $this->usersForTarget($this->userModalTarget ?? '')
+            ->filter(fn (User $user): bool => $search === '' || Str::contains(Str::lower($user->name.' '.$user->email), $search))
+            ->take(20)->values();
     }
 
     public function selectUserFromModal($userId)
     {
         $user = User::find($userId);
-        if ($user && in_array($this->userModalTarget, ['user_id', 'responsable_id', 'informatica_id'])) {
+        if ($user && self::userMatchesTarget($user, $this->userModalTarget ?? '')) {
             $this->{$this->userModalTarget} = $user->id;
         }
         $this->closeUserModal();
@@ -332,6 +385,8 @@ class Create extends Component
 
     public function save()
     {
+        Gate::authorize('manage-inventory-photos');
+
         Log::info('Livewire save ejecutado', [
             'user_id' => $this->user_id,
             'responsable_id' => $this->responsable_id,
@@ -341,25 +396,46 @@ class Create extends Component
             'auditoria' => $this->auditoria,
             'selected_inventories' => $this->selected_inventories,
         ]);
-        $this->validate();
-        $responsiva = Responsiva::create([
-            'user_id' => $this->user_id,
-            'responsable_id' => $this->responsable_id,
-            'informatica_id' => $this->informatica_id,
-            'fecha' => $this->fecha,
-            'codigo' => $this->codigo,
-            'auditoria' => $this->auditoria,
-        ]);
+        $rules = $this->rules;
+        $rules['codigo'] = ['required', 'string', 'max:20', Rule::unique('responsivas', 'codigo')->ignore($this->responsivaId)];
+        $this->validate($rules);
 
-        foreach ($this->selected_inventories as $inventory_id) {
-            InventoryResponsiva::create([
-                'responsiva_id' => $responsiva->id,
-                'inventory_id' => $inventory_id,
-                'description' => $this->inventoryDescriptions[$inventory_id] ?? null,
-            ]);
+        $selectedUsers = User::whereIn('id', [$this->user_id, $this->responsable_id, $this->informatica_id])->get()->keyBy('id');
+        foreach (['user_id', 'responsable_id', 'informatica_id'] as $target) {
+            $user = $selectedUsers->get($this->{$target});
+            if (! $user || ! self::userMatchesTarget($user, $target)) {
+                throw ValidationException::withMessages([
+                    $target => match ($target) {
+                        'responsable_id' => 'El responsable debe pertenecer a Órgano Interno de Control.',
+                        'informatica_id' => 'Seleccione un usuario válido de Dirección de Informática.',
+                        default => 'Seleccione un usuario válido para generar la carta.',
+                    },
+                ]);
+            }
         }
 
-        session()->flash('message', 'Carta responsiva creada correctamente.');
+        DB::transaction(function (): void {
+            $responsiva = $this->responsivaId === null ? new Responsiva : Responsiva::findOrFail($this->responsivaId);
+            $responsiva->fill([
+                'user_id' => $this->user_id,
+                'responsable_id' => $this->responsable_id,
+                'informatica_id' => $this->informatica_id,
+                'fecha' => $this->fecha,
+                'codigo' => $this->codigo,
+                'auditoria' => $this->auditoria,
+            ]);
+            $responsiva->save();
+
+            foreach ($this->selected_inventories as $inventory_id) {
+                $responsiva->inventoryResponsivas()->updateOrCreate(['inventory_id' => $inventory_id], [
+                    'description' => $this->inventoryDescriptions[$inventory_id] ?? null,
+                ]);
+            }
+
+            $responsiva->inventoryResponsivas()->whereNotIn('inventory_id', $this->selected_inventories)->delete();
+        });
+
+        session()->flash('message', $this->responsivaId === null ? 'Carta responsiva creada correctamente.' : 'Carta responsiva actualizada correctamente.');
         $this->reset(['user_id', 'responsable_id', 'informatica_id', 'fecha', 'codigo', 'auditoria', 'selected_inventories', 'inventoryDescriptions', 'selectedInventoryForPhotos', 'photo', 'photoDescription']);
 
         return $this->redirectRoute('cartasresponsivas.index');

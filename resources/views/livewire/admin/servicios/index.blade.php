@@ -264,89 +264,21 @@
                             </td>
                             <td data-label="Objetivo de la solicitud" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
-                                    @php
-                                        $objSol = $service->obj_sol ?? 'N/A';
-                                        $objSolWords = explode(' ', strip_tags($objSol));
-                                        $objSolShort = implode(' ', array_slice($objSolWords, 0, 20));
-                                        $objSolFull = $objSol;
-                                        $hasMoreObjSol = count($objSolWords) > 20;
-                                    @endphp
-                                    <div x-data="{ 
-                                        expanded: false,
-                                        shortText: @js($hasMoreObjSol ? $objSolShort . '...' : $objSolFull),
-                                        fullText: @js($objSolFull)
-                                    }" class="text-expandable">
-                                        <p class="font-medium text-white break-words text-truncated">
-                                            <span x-show="!expanded" x-html="shortText"></span>
-                                            <span x-show="expanded" x-html="fullText"></span>
-                                        </p>
-                                        @if($hasMoreObjSol)
-                                            <button 
-                                                @click="expanded = !expanded"
-                                                class="text-blue-400 hover:text-blue-300 text-xs mt-1 transition-colors expand-button"
-                                                x-text="expanded ? 'Ver menos' : 'Ver más'"
-                                            ></button>
-                                        @endif
-                                    </div>
+                                    <x-service-text :value="$service->obj_sol" expandable />
                                 </div>
                             </td>
                             <td data-label="Actividades realizadas" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
-                                    @php
-                                        $actividades = $service->actividades ?? 'N/A';
-                                        $actividadesWords = explode(' ', strip_tags($actividades));
-                                        $actividadesShort = implode(' ', array_slice($actividadesWords, 0, 20));
-                                        $actividadesFull = $actividades;
-                                        $hasMoreActividades = count($actividadesWords) > 20;
-                                    @endphp
-                                    <div x-data="{ 
-                                        expanded: false,
-                                        shortText: @js($hasMoreActividades ? $actividadesShort . '...' : $actividadesFull),
-                                        fullText: @js($actividadesFull)
-                                    }" class="text-expandable">
-                                        <p class="font-medium text-white break-words text-truncated">
-                                            <span x-show="!expanded" x-html="shortText"></span>
-                                            <span x-show="expanded" x-html="fullText"></span>
-                                        </p>
-                                        @if($hasMoreActividades)
-                                            <button 
-                                                @click="expanded = !expanded"
-                                                class="text-blue-400 hover:text-blue-300 text-xs mt-1 transition-colors expand-button"
-                                                x-text="expanded ? 'Ver menos' : 'Ver más'"
-                                            ></button>
-                                        @endif
-                                    </div>
+                                    <x-service-text :value="$service->actividades" expandable />
                                 </div>
                             </td>
                             <td data-label="Observaciones" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
-                                    @php
-                                        $observaciones = $service->observaciones ?? 'N/A';
-                                        $observacionesWords = explode(' ', strip_tags($observaciones));
-                                        $observacionesShort = implode(' ', array_slice($observacionesWords, 0, 20));
-                                        $observacionesFull = $observaciones;
-                                        $hasMoreObservaciones = count($observacionesWords) > 20;
-                                    @endphp
-                                    <div x-data="{ 
-                                        expanded: false,
-                                        shortText: @js($hasMoreObservaciones ? $observacionesShort . '...' : $observacionesFull),
-                                        fullText: @js($observacionesFull)
-                                    }" class="text-expandable">
-                                        <p class="font-medium text-white break-words text-truncated">
-                                            <span x-show="!expanded" x-html="shortText"></span>
-                                            <span x-show="expanded" x-html="fullText"></span>
-                                        </p>
-                                        @if($hasMoreObservaciones)
-                                            <button 
-                                                @click="expanded = !expanded"
-                                                class="text-blue-400 hover:text-blue-300 text-xs mt-1 transition-colors expand-button"
-                                                x-text="expanded ? 'Ver menos' : 'Ver más'"
-                                            ></button>
-                                        @endif
-                                    </div>
+                                    <x-service-text :value="$service->observaciones" expandable />
                                 </div>
                             </td>
                             <td data-label="Estado" class="px-3 py-4 text-center">
+                                @can('manage-services')
                                 @if($service->status)
                                     <button 
                                         wire:click="toggleStatus({{ $service->id }})"
@@ -364,9 +296,15 @@
                                         Inactivo
                                     </button>
                                 @endif
+                                                            @else
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $service->status ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-black' }}">
+                                        {{ $service->status ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                @endcan
                             </td>
                             <td data-label="Acciones" class="px-3 py-4">
                                 <div class="flex items-center justify-center gap-1">
+                                    @can('manage-services')
                                     <button 
                                         wire:click="editService({{ $service->id }})"
                                         class="text-blue-400 hover:text-blue-300 transition-colors"
@@ -374,6 +312,7 @@
                                     >
                                         <x-lucide name="edit" class="w-4 h-4" />
                                     </button>
+                                    @endcan
                                     {{-- Reportede Servicio Normal --}}
                                     @if (auth()->user()->tipo !== 3)
                                     <button 
