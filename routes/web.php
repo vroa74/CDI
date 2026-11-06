@@ -15,6 +15,7 @@ use App\Http\Controllers\UsuariosController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 Route::get('/', function () {
     return view('welcome');
@@ -188,3 +189,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 //     // Route::get('/dashboard', function () {    return view('dashboard');   })->name('dashboard');
 
 // });
+
+// Iniciar la sesión web antes de mostrar el error de una dirección inexistente.
+Route::fallback(function (): never {
+    throw new NotFoundHttpException;
+})->name('errors.not-found');

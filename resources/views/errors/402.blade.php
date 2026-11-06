@@ -1,5 +1,6 @@
 @extends('errors::minimal')
 
-@section('title', __('Payment Required'))
+@section('title', 'Pago requerido')
 @section('code', '402')
-@section('message', __('Payment Required'))
+@section('message', 'Pago requerido')
+@section('description', 'No se puede completar esta solicitud en este momento.')
