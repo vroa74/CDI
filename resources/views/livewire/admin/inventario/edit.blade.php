@@ -279,11 +279,11 @@
 
     {{-- ======================= INICIO: Modal de Usuarios ======================= --}}
     @if ($showModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-gray-800 rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-white">{{ $modalTitle }}</h3>
-                    <button wire:click="closeModal" class="text-gray-400 hover:text-white">
+                    <button wire:click="closeModal" class="modal-action text-white bg-gray-600 hover:bg-gray-700">
                         <x-lucide name="x" class="w-6 h-6" />
                     </button>
                 </div>

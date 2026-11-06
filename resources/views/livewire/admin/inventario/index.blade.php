@@ -11,37 +11,37 @@
         </div>
         <div x-show="open" x-transition class="bg-blue-950 px-4 py-2 rounded-b-xl border-t-0 border border-blue-800">
             <!-- Tabla de filtros dentro del acordeón -->
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                 <div
-                    class="h-12 bg-gray-900 border-2 border-pink-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-pink-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <input type="text" wire:model.live="filterUserName" placeholder="Usuario"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-pink-400 rounded text-pink-200 placeholder-pink-400 focus:ring-1 focus:ring-pink-500 focus:border-transparent text-xs">
                     <input type="text" wire:model.live="filterResponsibleName" placeholder="Responsable"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-pink-400 rounded text-pink-200 placeholder-pink-400 focus:ring-1 focus:ring-pink-500 focus:border-transparent text-xs">
                 </div>
                 <div
-                    class="h-12 bg-gray-900 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <input type="text" wire:model.live="filterNi" placeholder="NI"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-cyan-400 rounded text-cyan-200 placeholder-cyan-400 focus:ring-1 focus:ring-cyan-500 focus:border-transparent text-xs">
                     <input type="text" wire:model.live="filterDireccion" placeholder="Dirección"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-cyan-400 rounded text-cyan-200 placeholder-cyan-400 focus:ring-1 focus:ring-cyan-500 focus:border-transparent text-xs">
                 </div>
                 <div
-                    class="h-12 bg-gray-900 border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <input type="text" wire:model.live="filterNs" placeholder="NS"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-yellow-400 rounded text-yellow-200 placeholder-yellow-400 focus:ring-1 focus:ring-yellow-500 focus:border-transparent text-xs">
                     <input type="text" wire:model.live="filterArticulo" placeholder="Artículo"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-yellow-400 rounded text-yellow-200 placeholder-yellow-400 focus:ring-1 focus:ring-yellow-500 focus:border-transparent text-xs">
                 </div>
                 <div
-                    class="h-12 bg-gray-900 border-2 border-pink-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-pink-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <input type="text" wire:model.live="filterMarca" placeholder="Marca"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-pink-400 rounded text-pink-200 placeholder-pink-400 focus:ring-1 focus:ring-pink-500 focus:border-transparent text-xs">
                     <input type="text" wire:model.live="filterModelo" placeholder="Modelo"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-pink-400 rounded text-pink-200 placeholder-pink-400 focus:ring-1 focus:ring-pink-500 focus:border-transparent text-xs">
                 </div>
                 <div
-                    class="h-12 bg-gray-900 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-cyan-400 rounded-xl flex flex-col items-center justify-center gap-0.5">
                     <select wire:model.live="filterFechaInv"
                         class="w-11/12 px-1 py-0.5 bg-gray-800 border border-cyan-400 rounded text-cyan-200 focus:ring-1 focus:ring-cyan-500 focus:border-transparent text-xs">
                         <option value="">Todas las fechas</option>
@@ -58,7 +58,7 @@
                     </select>
                 </div>
                 <div
-                    class="h-12 bg-gray-900 border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-center text-sm font-bold text-yellow-300">
+                    class="min-h-12 py-3 bg-gray-900 border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-center text-sm font-bold text-yellow-300">
                     <div class="text-sm font-bold text-yellow-300 mb-1">
                         {{ $inventories->total() }} Registros
                     </div>
@@ -142,8 +142,8 @@
 
     <!-- Tabla de inventario -->
     <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-700 rounded-3xl overflow-hidden">
+        <div class="min-w-0 max-w-full w-full">
+            <table class="responsive-table w-full divide-y divide-gray-700 rounded-3xl overflow-hidden">
                 <thead class="bg-gray-700">
                     <tr>
                         <th
@@ -183,19 +183,19 @@
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @forelse($inventories as $item)
                         <tr class="hover:bg-gray-700 transition-colors">
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Artículo" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="font-medium text-white">{{ $item->articulo ?? 'N/A' }}</div>
                                 <div class="text-xs text-gray-400">NI: {{ $item->ni ?? 'N/A' }}</div>
                                 <div class="text-xs text-yellow-300">ID: {{ $item->id ?? 'N/A' }}</div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Detalles" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="space-y-1">
                                     <div><span class="font-semibold">NS:</span> {{ $item->ns ?? 'N/A' }}</div>
                                     <div><span class="font-semibold">Marca:</span> {{ $item->marca ?? 'N/A' }}</div>
                                     <div><span class="font-semibold">Modelo:</span> {{ $item->modelo ?? 'N/A' }}</div>
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Resguardante" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="font-medium text-white">
                                     @if ($item->responsible)
                                         {{ $item->responsible->name ?? 'SN' }}
@@ -211,7 +211,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Usuarios" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="space-y-2">
                                     @if ($item->assignedUser)
                                         <div>
@@ -233,7 +233,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-center">
+                            <td data-label="Tipo" class="px-3 py-4 text-center">
                                 @if ($item->is_pc)
                                     <span
                                         class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -246,7 +246,7 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Servicios Asociados" class="px-3 py-4 text-sm text-gray-300">
                                 @if ($item->services && $item->services->count() > 0)
                                     <div class="space-y-1">
                                         @foreach ($item->services as $service)
@@ -275,7 +275,7 @@
                                     </div>
                                 @endif
                             </td>
-                            <td class="px-3 py-4 text-center">
+                            <td data-label="Estado" class="px-3 py-4 text-center">
                                 @if ($item->status)
                                     <button wire:click="toggleStatus({{ $item->id }})"
                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
@@ -290,7 +290,7 @@
                                     </button>
                                 @endif
                             </td>
-                            <td class="px-3 py-4">
+                            <td data-label="Acciones" class="px-3 py-4">
                                 <div class="flex items-center justify-center gap-1">
                                     <button wire:click="editInventory({{ $item->id }})"
                                         class="text-blue-400 hover:text-blue-300 transition-colors" title="Editar">
@@ -327,11 +327,11 @@
 
     <!-- Modal de Reportes -->
     @if ($showReportModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-white">Generar Reporte</h3>
-                    <button wire:click="closeReportModal" class="text-gray-400 hover:text-white">
+                    <button wire:click="closeReportModal" class="modal-action text-white bg-gray-600 hover:bg-gray-700">
                         <x-lucide name="x" class="w-6 h-6" />
                     </button>
                 </div>
@@ -350,7 +350,7 @@
                     </div>
 
                     <!-- Rango de Fechas -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-2">Desde</label>
                             <input wire:model="reportDateFrom" type="date"
@@ -389,11 +389,11 @@
                     <!-- Botones -->
                     <div class="flex gap-3 pt-4">
                         <button type="button" wire:click="closeReportModal"
-                            class="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                            class="modal-action text-white flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700  rounded-lg transition-colors">
                             Cancelar
                         </button>
                         <button type="submit"
-                            class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2">
+                            class="modal-action text-white flex-1 px-4 py-2 bg-green-600 hover:bg-green-700  rounded-lg transition-colors flex items-center justify-center gap-2">
                             <x-lucide name="download" class="w-4 h-4" />
                             Generar PDF
                         </button>

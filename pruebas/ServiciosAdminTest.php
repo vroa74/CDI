@@ -49,7 +49,7 @@ test('ruta servicios index carga la vista admin.servicios.index', function () {
 
     $response->assertStatus(200);
     $response->assertViewIs('admin.servicios.index');
-    $response->assertSeeLivewire(Index::class);
+    $response->assertSeeLivewire('admin.servicios.index');
 });
 
 test('ruta servicios create carga la vista admin.servicios.create', function () {

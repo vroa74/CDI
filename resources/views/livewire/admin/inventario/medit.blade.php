@@ -348,12 +348,12 @@
 
     <!-- Modal de selección de usuario -->
     @if($showModal)
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
+    <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
         <div class="bg-gray-800 rounded-t-lg sm:rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div class="p-4 border-b border-gray-700">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-white">{{ $modalTitle }}</h3>
-                    <button wire:click="closeModal" class="text-gray-400 hover:text-white">
+                    <button wire:click="closeModal" class="modal-action text-white bg-gray-600 hover:bg-gray-700">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>

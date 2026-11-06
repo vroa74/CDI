@@ -1,6 +1,6 @@
 <!-- Modal de Selección de Inventario -->
 @if ($showInventoryModal)
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+    <div class="app-modal service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
         <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
             <div class="p-4 sm:p-6 border-b border-gray-700">
                 <div class="flex items-center justify-between">
@@ -15,7 +15,7 @@
                             {{ $inventoryParam5 ?? '' }},
                         </div>
                     </h3>
-                    <button wire:click="closeInventoryModal" class="text-gray-400 hover:text-white transition-colors">
+                    <button wire:click="closeInventoryModal" class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700">
                         <x-lucide name="x" class="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
                 </div>
@@ -71,20 +71,20 @@
                 
                 <!-- Tabla de inventarios -->
                 <div class="bg-gray-700 rounded-3xl overflow-hidden border border-gray-600">
-                    <div class="overflow-x-auto">
-                        <table class="w-full rounded-3xl overflow-hidden">
+                    <div class="min-w-0 w-full max-w-full">
+                        <table class="responsive-table w-full rounded-3xl overflow-hidden">
                             <thead class="bg-gray-600">
                                 <tr>
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         NI / SN
                                     </th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden sm:table-cell">
+                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         TYPE
                                     </th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden lg:table-cell">
+                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         ARTICULO
                                     </th>
-                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider hidden xl:table-cell">
+                                    <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                         USUARIO / DIRECCIÓN
                                     </th>
                                     <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -95,24 +95,21 @@
                             <tbody class="bg-gray-700 divide-y divide-gray-600">
                                 @forelse($filteredInventories as $inv)
                                     <tr wire:key="inv-{{ $inv->id }}" class="hover:bg-gray-600 transition-colors">
-                                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs text-gray-300">
+                                        <td data-label="NI / SN" class="px-2 sm:px-4 py-3 sm:py-4 whitespace-normal text-xs text-gray-300">
                                             <div class="flex flex-col space-y-1">
                                                 <div><span class="text-blue-400 font-medium">NI:</span> {{ $inv->ni ?? 'N/A' }}</div>
                                                 <div><span class="text-green-400 font-medium">SN:</span> {{ $inv->ns ?? 'N/A' }}</div>
                                             </div>
                                             <!-- Información adicional visible en móvil -->
-                                            <div class="sm:hidden text-xs text-gray-400 mt-2">
-                                                <div><strong>TIPO:</strong> {{ $inv->type ?? 'N/A' }}</div>
-                                                <div><strong>ARTÍCULO:</strong> {{ $inv->articulo ?? 'N/A' }}</div>
-                                            </div>
+
                                         </td>
-                                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs text-gray-300 hidden sm:table-cell">
+                                        <td data-label="TYPE" class="px-2 sm:px-4 py-3 sm:py-4 whitespace-normal text-xs text-gray-300">
                                             {{ $inv->type ?? 'N/A' }}
                                         </td>
-                                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs text-gray-300 hidden lg:table-cell">
+                                        <td data-label="ARTICULO" class="px-2 sm:px-4 py-3 sm:py-4 whitespace-normal text-xs text-gray-300">
                                             {{ $inv->articulo ?? 'N/A' }}
                                         </td>
-                                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs text-gray-300 hidden xl:table-cell">
+                                        <td data-label="USUARIO / DIRECCIÓN" class="px-2 sm:px-4 py-3 sm:py-4 whitespace-normal text-xs text-gray-300">
                                             @if ($inv->assignedUser)
                                                 <div class="flex flex-col space-y-1">
                                                     <div><span class="text-blue-400 font-medium">Usuario:</span> {{ $inv->assignedUser->name }}</div>
@@ -132,9 +129,9 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td class="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs font-medium">
+                                        <td data-label="Acciones" class="px-2 sm:px-4 py-3 sm:py-4 whitespace-normal text-xs font-medium">
                                             <button wire:click="selectInventory({{ $inv->id }})"
-                                                class="text-green-400 hover:text-green-300 transition-colors"
+                                                class="modal-action bg-green-600 text-white hover:bg-green-700 transition-colors"
                                                 title="Seleccionar">
                                                 <i class="ri-invision-line"></i>
                                             </button>
@@ -157,7 +154,7 @@
                 <!-- Botones del modal -->
                 <div class="flex justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-700 mt-4">
                     <button type="button" wire:click="closeInventoryModal"
-                        class="px-3 sm:px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm">
+                        class="modal-action text-white px-3 sm:px-4 py-2  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm">
                         Cancelar
                     </button>
                 </div>

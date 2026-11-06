@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-900 p-4">
     <!-- Header con título y botón de crear -->
-    <div class="mb-6 flex justify-between items-center">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div>
             <h1 class="text-2xl font-bold text-white">Gestión de cartas responsivas</h1>
             <p class="text-gray-400 mt-1">Administra las cartas responsivas del sistema</p>
@@ -104,8 +104,8 @@
 
     <!-- Tabla de cartas responsivas -->
     <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-700">
+        <div class="min-w-0 max-w-full w-full">
+            <table class="responsive-table w-full divide-y divide-gray-700">
                 <thead class="bg-gray-700">
                     <tr>
                         <th class="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-600 transition-colors" wire:click="sortBy('codigo')">
@@ -159,16 +159,16 @@
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @forelse($responsivas as $responsiva)
                         <tr class="hover:bg-gray-700 transition-colors">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td data-label="Código @endif" class="px-6 py-4 whitespace-normal">
                                 <div class="text-sm font-medium text-white">{{ $responsiva->codigo }}</div>
                                 @if($responsiva->observacion)
                                     <div class="text-xs text-gray-400 mt-1">{{ Str::limit($responsiva->observacion, 50) }}</div>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                            <td data-label="Fecha @endif" class="px-6 py-4 whitespace-normal text-sm text-gray-300">
                                 {{ $responsiva->fecha ? $responsiva->fecha->format('d/m/Y') : 'N/A' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td data-label="Usuario" class="px-6 py-4 whitespace-normal">
                                 <div class="text-sm text-gray-300">
                                     @if($responsiva->user)
                                         <div class="font-medium text-white">{{ $responsiva->user->name }}</div>
@@ -178,7 +178,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td data-label="Responsable" class="px-6 py-4 whitespace-normal">
                                 <div class="text-sm text-gray-300">
                                     @if($responsiva->responsable)
                                         <div class="font-medium text-white">{{ $responsiva->responsable->name }}</div>
@@ -188,7 +188,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td data-label="Informática" class="px-6 py-4 whitespace-normal">
                                 <div class="text-sm text-gray-300">
                                     @if($responsiva->informatica)
                                         <div class="font-medium text-white">{{ $responsiva->informatica->name }}</div>
@@ -198,12 +198,12 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <td data-label="Artículos" class="px-6 py-4 whitespace-normal text-center">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     {{ $responsiva->inventoryResponsivas->count() }} artículos
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <td data-label="Auditoría" class="px-6 py-4 whitespace-normal text-center">
                                 @if($responsiva->auditoria)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +220,7 @@
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <td data-label="Acciones" class="px-6 py-4 whitespace-normal text-center text-sm font-medium">
                                 <div class="flex items-center justify-center gap-2">
                                     <a href="{{ route('cartasresponsivas.show', $responsiva->id) }}" 
                                        class="text-blue-400 hover:text-blue-300 transition-colors" 

@@ -1,4 +1,15 @@
 <laravel-boost-guidelines>
+## Bloqueo de operaciones de base de datos sin autorización explícita
+
+- Está prohibido modificar la base de datos o ejecutar cualquier comando, herramienta, consulta o código que se conecte a una base de datos sin autorización previa y explícita del usuario para esa operación concreta.
+- La prohibición incluye consultas de solo lectura, inspecciones, respaldos, restauraciones, migraciones, seeders, factories, Tinker, SQL, herramientas MCP y pruebas que usen bases de datos, incluso bases de pruebas.
+- Una solicitud de cambios visuales, correcciones, instalación de herramientas o verificación general NO autoriza operaciones de base de datos. No deducir autorización de solicitudes anteriores ni del permiso para ejecutar comandos del sistema.
+- Antes de solicitar autorización, explicar la operación exacta, la conexión y la base de datos objetivo, su finalidad y si modifica datos o esquema. Esperar una respuesta afirmativa; el silencio no es autorización.
+- No cambiar `.env`, credenciales ni conexiones de base de datos sin autorización específica.
+- Ante una conexión inesperada o configuración cacheada, detenerse. No limpiar la caché, cambiar conexiones ni intentar nuevamente contra otra base para sortear el bloqueo.
+- Se permite editar archivos de código autorizados y comprobar su sintaxis sin inicializar Laravel ni conectarse a ninguna base de datos.
+- Esta regla prevalece sobre las instrucciones de ejecutar pruebas, migraciones, respaldos y consultas por defecto. Las protecciones técnicas no sustituyen la autorización del usuario.
+
 === reglas base ===
 
 # Pruebas y archivos de pruebas
@@ -53,6 +64,14 @@ Este proyecto tiene habilidades específicas de dominio disponibles en `**/skill
 - Campos de contraseña: todo input de contraseña debe incluir el botón de mostrar/ocultar con el estilo del login (icono de ojo SVG, `text-gray-400 hover:text-gray-600`, posicionado a la derecha). En Livewire/Blade usa el componente `<x-password-toggle-button />` dentro de un contenedor `relative` con `x-data="{ show: false }"` y `x-bind:type="show ? 'text' : 'password'"` en el input.
 - Mensajes de sesión: conserva claves estándar observadas (`message`, `error`) y textos claros en español.
 - Comentarios: usa comentarios breves y útiles, preferentemente en español, solo cuando aporten contexto no obvio.
+
+## Diseño responsive obligatorio
+
+- Todo lo que se cree o modifique debe ser responsive, incluyendo páginas, tablas, formularios, componentes y modales.
+- Solo se permite desplazamiento vertical. El desplazamiento horizontal está prohibido en cualquier tamaño de pantalla.
+- Adapta el contenido al ancho disponible mediante tarjetas, columnas apiladas, ajuste de texto y controles flexibles. No ocultes ni recortes contenido para disimular desbordamientos.
+- Desde XL (1280 px), conserva la presentación de escritorio y su navbar. Por debajo de XL, adapta la interfaz a móviles y tabletas.
+- Verifica los cambios con contenido largo, estados vacíos y modales abiertos, antes y después del punto XL.
 
 ## Scripts de verificación
 

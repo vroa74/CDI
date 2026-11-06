@@ -1,4 +1,4 @@
-<div class="p-1">
+<div class="min-w-0 w-full p-1">
     <!-- Mensaje de éxito -->
     @if (session()->has('message'))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show"
@@ -32,9 +32,9 @@
         </div>
         <div x-show="open" x-transition class="bg-blue-950 px-3 py-2 rounded-b-3xl border-t-0 border border-blue-800">
             <!-- Contenido de filtros para servicios -->
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                 <!-- Primera fila: Columna 1 - 3 inputs de texto -->
-                <div class="h-18 bg-gray-900 border-2 border-green-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-green-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
                     <input type="text" wire:model.live="filterSolicitante" placeholder="Solicitante"
                         class="w-[90%] px-2 py-1 bg-gray-800 border border-green-400 rounded-lg text-green-200 placeholder-green-400 focus:ring-2 focus:ring-green-500 focus:border-transparent text-xs text-center">
                     <input type="text" wire:model.live="filterEfectuo" placeholder="Efectuó"
@@ -43,27 +43,27 @@
                         class="w-[90%] px-2 py-1 bg-gray-800 border border-green-400 rounded-lg text-green-200 placeholder-green-400 focus:ring-2 focus:ring-green-500 focus:border-transparent text-xs text-center">
                 </div>
                 <!-- Columna 2: Inputs de ID arriba de inputs de fecha -->
-                <div class="h-24 bg-gray-900 border-2 border-cyan-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-1">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-cyan-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-1">
                     <!-- Filtros de ID -->
                     <div class="flex items-center justify-center gap-2 w-full">
                         <input type="number" wire:model.live="filterIdMin" placeholder="ID Mínimo"
-                            class="w-[40%] px-2 py-1 bg-gray-800 border border-pink-400 rounded-lg text-pink-200 placeholder-pink-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-xs text-center"
+                            class="min-w-0 flex-1 w-0 px-2 py-1 bg-gray-800 border border-pink-400 rounded-lg text-pink-200 placeholder-pink-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-xs text-center"
                             min="1">
                         <span class="text-pink-300 font-medium text-xs flex-shrink-0">al</span>
                         <input type="number" wire:model.live="filterIdMax" placeholder="ID Máximo"
-                            class="w-[40%] px-2 py-1 bg-gray-800 border border-pink-400 rounded-lg text-pink-200 placeholder-pink-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-xs text-center"
+                            class="min-w-0 flex-1 w-0 px-2 py-1 bg-gray-800 border border-pink-400 rounded-lg text-pink-200 placeholder-pink-400 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-xs text-center"
                             min="1">
                     </div>
                     <!-- Filtros de Fecha -->
                     <div class="flex items-center justify-center gap-2 w-full">
                         <input type="date" wire:model.live="filterFechaMin" placeholder="Fecha Mínima"
-                            class="w-[42%] px-1 py-1 bg-gray-800 border border-cyan-400 rounded-lg text-cyan-200 placeholder-cyan-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-xs text-center">
+                            class="min-w-0 flex-1 w-0 px-1 py-1 bg-gray-800 border border-cyan-400 rounded-lg text-cyan-200 placeholder-cyan-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-xs text-center">
                         <span class="text-cyan-300 font-medium text-xs flex-shrink-0">al</span>
                         <input type="date" wire:model.live="filterFechaMax" placeholder="Fecha Máxima"
-                            class="w-[42%] px-1 py-1 bg-gray-800 border border-cyan-400 rounded-lg text-cyan-200 placeholder-cyan-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-xs text-center">
+                            class="min-w-0 flex-1 w-0 px-1 py-1 bg-gray-800 border border-cyan-400 rounded-lg text-cyan-200 placeholder-cyan-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-xs text-center">
                     </div>
                 </div>
-                <div class="h-14 bg-gray-900 border-2 border-yellow-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-yellow-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
                     <div class="text-yellow-300 font-medium text-sm mb-0.5">Registros por página</div>
                     <select wire:model.live="perPage"
                         class="w-11/12 px-2 py-1 bg-gray-800 border border-yellow-400 rounded-lg text-yellow-200 focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm">
@@ -79,9 +79,9 @@
                         <option value="200">200 por página</option>
                     </select>
                 </div>
-                <div class="h-18 bg-gray-900 border-2 border-pink-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-pink-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
                     <div class="text-pink-300 font-medium text-sm mb-0.5">Tipo de servicio</div>
-                    <div class="grid grid-cols-3 gap-1 w-full">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full">
                         <label class="flex items-center text-xs text-pink-200">
                             <input type="checkbox" wire:model.live="filterCorrectivo" class="mr-1">
                             Correctivo
@@ -108,9 +108,9 @@
                         </label>
                     </div>
                 </div>
-                <div class="h-18 bg-gray-900 border-2 border-cyan-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-cyan-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
                     <div class="text-cyan-300 font-medium text-sm mb-0.5">Vía de solicitud</div>
-                    <div class="grid grid-cols-3 gap-1 w-full">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full">
                         <label class="flex items-center text-xs text-cyan-200">
                             <input type="checkbox" wire:model.live="filterEmail" class="mr-1">
                             Correo
@@ -133,7 +133,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="h-18 bg-gray-900 border-2 border-yellow-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
+                <div class="min-w-0 py-3 bg-gray-900 border-2 border-yellow-400 rounded-3xl flex flex-col items-center justify-center gap-1 px-2">
                     <div class="text-lg font-bold text-yellow-300">
                         {{ $services->total() }}
                     </div>
@@ -177,8 +177,8 @@
 
     <!-- Tabla de servicios -->
     <div class="bg-blue-800 rounded-3xl overflow-hidden shadow-lg border border-blue-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-700 rounded-3xl overflow-hidden">
+        <div class="min-w-0 w-full">
+            <table class="responsive-table w-full divide-y divide-gray-700 rounded-3xl overflow-hidden">
                 <thead class="bg-blue-900">
                     <tr>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[8%] rounded-tl-3xl">
@@ -187,7 +187,7 @@
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[10%]">
                             Fecha de servicio
                         </th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[22%]">
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[18%]">
                             Involucrados
                         </th>
                         <th class="px-3 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider w-[12%]">
@@ -202,7 +202,7 @@
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[8%]">
                             Estado
                         </th>
-                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[5%] rounded-tr-3xl">
+                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[9%] rounded-tr-3xl">
                             Acciones
                         </th>
                     </tr>
@@ -234,16 +234,16 @@
                                 $hoverColor = 'hover:bg-green-700';
                             }
                         @endphp
-                        <tr class="{{ $bgColor }} {{ $hoverColor }} transition-colors">
-                            <td class="px-3 py-4 text-sm text-gray-300 whitespace-nowrap">
+                        <tr wire:key="service-{{ $service->id }}" class="{{ $bgColor }} {{ $hoverColor }} transition-colors">
+                            <td data-label="Servicio" class="px-3 py-4 text-sm text-gray-300 whitespace-normal">
                                 id: {{ $service->id ?? 'N/A' }} <br> 
                                 serv:{{ $service->id_s ?? 'N/A' }} <br> 
                                 <span class="text-xs text-red-600"> {  <span  class="text-10px text-yellow-300"> {{ $this->NameQrCode($service->id_s) }}  </span>   } </span>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300 whitespace-nowrap">
+                            <td data-label="Fecha" class="px-3 py-4 text-sm text-gray-300 whitespace-normal">
                                 {{ $service->F_serv ? $service->F_serv->format('d/m/Y') : 'N/A' }}
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Participantes" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="space-y-1">
                                     @if($service->solicitante)
                                         <div class="text-xs text-gray-400">Solicitante:</div>
@@ -262,7 +262,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Objetivo de la solicitud" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
                                     @php
                                         $objSol = $service->obj_sol ?? 'N/A';
@@ -290,7 +290,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Actividades realizadas" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
                                     @php
                                         $actividades = $service->actividades ?? 'N/A';
@@ -318,7 +318,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-sm text-gray-300">
+                            <td data-label="Observaciones" class="px-3 py-4 text-sm text-gray-300">
                                 <div class="text-center">
                                     @php
                                         $observaciones = $service->observaciones ?? 'N/A';
@@ -346,7 +346,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-3 py-4 text-center">
+                            <td data-label="Estado" class="px-3 py-4 text-center">
                                 @if($service->status)
                                     <button 
                                         wire:click="toggleStatus({{ $service->id }})"
@@ -365,7 +365,7 @@
                                     </button>
                                 @endif
                             </td>
-                            <td class="px-3 py-4">
+                            <td data-label="Acciones" class="px-3 py-4">
                                 <div class="flex items-center justify-center gap-1">
                                     <button 
                                         wire:click="editService({{ $service->id }})"
@@ -428,11 +428,11 @@
 
     <!-- Modal de Reportes -->
     @if($showReportModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-medium text-white">Generar reporte</h3>
-                    <button wire:click="closeReportModal" class="text-gray-400 hover:text-white">
+                    <button wire:click="closeReportModal" class="modal-action text-white bg-gray-600 hover:bg-gray-700">
                         <x-lucide name="x" class="w-6 h-6" />
                     </button>
                 </div>
@@ -450,7 +450,7 @@
                     </div>
 
                     <!-- Rango de Fechas -->
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-300 mb-2">Desde</label>
                             <input wire:model.defer="reportDateFrom" wire:blur="$refresh" type="date" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -484,10 +484,10 @@
 
                     <!-- Botones -->
                     <div class="flex gap-3 pt-4">
-                        <button type="button" wire:click="closeReportModal" class="flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                        <button type="button" wire:click="closeReportModal" class="modal-action text-white flex-1 px-4 py-2 bg-gray-600 hover:bg-gray-700  rounded-lg transition-colors">
                             Cancelar
                         </button>
-                        <button type="submit" class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <button type="submit" class="modal-action text-white flex-1 px-4 py-2 bg-green-600 hover:bg-green-700  rounded-lg transition-colors flex items-center justify-center gap-2">
                             <x-lucide name="download" class="w-4 h-4" />
                             Generar PDF
                         </button>

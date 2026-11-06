@@ -59,7 +59,7 @@
     <!-- Tabla de usuarios -->
     <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-700 w-full max-w-none">
         <!-- Vista móvil: Cards -->
-        <div class="block lg:hidden">
+        <div class="block xl:hidden">
             @forelse($users as $user)
                 <div class="p-4 border-b border-gray-700 hover:bg-gray-700 transition-colors mobile-card">
                     <div class="flex items-start justify-between mb-3">
@@ -194,8 +194,8 @@
         </div>
         
         <!-- Vista desktop: Tabla -->
-        <div class="hidden lg:block overflow-x-auto w-full">
-            <table class="w-full divide-y divide-gray-700 rounded-3xl overflow-hidden table-auto-height">
+        <div class="hidden xl:block min-w-0 max-w-full w-full w-full">
+            <table class="responsive-table w-full divide-y divide-gray-700 rounded-3xl overflow-hidden table-auto-height">
                 <thead class="bg-gray-700">
                     <tr>
                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider w-[25%] rounded-tl-3xl">
@@ -227,7 +227,7 @@
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     @forelse($users as $user)
                         <tr class="hover:bg-gray-700 transition-colors">
-                            <td class="px-3 py-3">
+                            <td data-label="Usuario" class="px-3 py-3">
                                 <div class="flex items-start">
                                     <div class="flex-shrink-0 h-6 w-6 mt-1">
                                         @if($user->hasProfilePhoto())
@@ -246,12 +246,12 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-3 py-3 text-sm text-gray-300">
+                            <td data-label="RFC" class="px-3 py-3 text-sm text-gray-300">
                                 <div class="truncate" title="{{ $user->rfc ?? 'N/A' }}">
                                     {{ $user->rfc ?? 'N/A' }}
                                 </div>
                             </td>
-                            <td class="px-3 py-3 text-sm text-gray-300">
+                            <td data-label="Dirección / Posición" class="px-3 py-3 text-sm text-gray-300">
                                 <div class="space-y-1">
                                     @if($user->direction)
                                         <div class="font-medium text-white truncate" title="{{ $user->direction }}">
@@ -268,7 +268,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td data-label="Sexo" class="px-3 py-3 text-center">
                                 @if($user->sex)
                                     <div class="flex items-center justify-center gap-2">
                                         @if($user->sex === 'masculino')
@@ -302,12 +302,12 @@
                                     </button>
                                 @endif
                             </td>
-                            <td class="px-3 py-3 text-center text-sm text-gray-300">
+                            <td data-label="Nivel" class="px-3 py-3 text-center text-sm text-gray-300">
                                 <div class="truncate" title="Nivel: {{ $user->lvl ?? 'N/A' }}">
                                     {{ $user->lvl ?? 'N/A' }}
                                 </div>
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td data-label="Tipo" class="px-3 py-3 text-center">
                                 @switch($user->tipo)
                                     @case(1)
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" title="Administrador">
@@ -328,7 +328,7 @@
                                         <span class="text-gray-500">N/A</span>
                                 @endswitch
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td data-label="Estado" class="px-3 py-3 text-center">
                                 @if($user->status)
                                     <button 
                                         wire:click="toggleStatus({{ $user->id }})"
@@ -347,7 +347,7 @@
                                     </button>
                                 @endif
                             </td>
-                            <td class="px-3 py-3 text-center">
+                            <td data-label="Acciones" class="px-3 py-3 text-center">
                                 <div class="flex items-center justify-center gap-1">
                                     <button 
                                         wire:click="editUser({{ $user->id }})"
@@ -389,7 +389,7 @@
 
     <!-- Modal de Usuario -->
     @if($showModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+        <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-2 sm:p-4 overflow-y-auto">
             <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-[95%] sm:max-w-[75%] lg:max-w-[60%] my-4 sm:my-8">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex items-center justify-between">
@@ -398,7 +398,7 @@
                         </h3>
                         <button 
                             wire:click="closeModal"
-                            class="text-gray-400 hover:text-white transition-colors"
+                            class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700"
                         >
                             <x-lucide name="x" class="w-6 h-6" />
                         </button>
@@ -652,7 +652,7 @@
                                 <button 
                                     type="button" 
                                     x-on:click.prevent="$refs.photo.click()"
-                                    class="w-full sm:w-auto px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white text-sm rounded-lg transition-colors"
+                                    class="modal-action text-white w-full sm:w-auto px-4 py-2 bg-gray-600 hover:bg-gray-500  text-sm rounded-lg transition-colors"
                                 >
                                     {{ $editing ? 'Cambiar' : 'Seleccionar' }}
                                 </button>
@@ -661,7 +661,7 @@
                                     <button 
                                         type="button" 
                                         wire:click="deleteProfilePhoto"
-                                        class="w-full sm:w-auto px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm rounded-lg transition-colors"
+                                        class="modal-action text-white w-full sm:w-auto px-4 py-2 bg-red-600 hover:bg-red-500  text-sm rounded-lg transition-colors"
                                     >
                                         Eliminar
                                     </button>
@@ -771,14 +771,14 @@
                         <button 
                             type="button"
                             wire:click="closeModal"
-                            class="w-full sm:w-auto px-6 py-3 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-base"
+                            class="modal-action text-white w-full sm:w-auto px-6 py-3  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-base"
                         >
                             Cancelar
                         </button>
                         <button 
                             type="button"
                             wire:click="saveUser"
-                            class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-base"
+                            class="modal-action text-white w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700  rounded-lg transition-colors flex items-center justify-center gap-2 text-base"
                         >
                             <x-lucide name="save" class="w-4 h-4" />
                             {{ $editing ? 'Actualizar' : 'Crear' }}

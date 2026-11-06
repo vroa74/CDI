@@ -2,10 +2,10 @@
 
 <div class="min-h-screen bg-gray-900 p-4">
     
-    <div class="flex gap-6 h-full">
+    <div class="flex flex-col xl:flex-row gap-6 h-full">
         <!-- Primera columna - Formulario actual (67%) -->
-        <div class="w-[67%]">
-            <div class="bg-gray-800 rounded-lg mb-1 shadow-xl w-full max-w-full px-8 mx-auto">
+        <div class="w-full min-w-0 xl:w-[67%] xl:flex-1">
+            <div class="bg-gray-800 rounded-lg mb-1 shadow-xl w-full max-w-full px-3 sm:px-6 mx-auto">
                 <div class="p-1 border-b border-gray-700">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-medium text-white">
@@ -74,7 +74,7 @@
                         @enderror
                     </div>
                     {{-- ========================================================================================================================================================================================================= --}}
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <div class="flex items-center gap-2 mb-2">
                                 <label for="actividades" class="block text-sm font-medium text-gray-300 mb-2">
@@ -386,7 +386,7 @@
         </div>
 
         <!-- Tercera columna - Fotos del Servicio (33%) -->
-        <div class="w-[33%]">
+        <div class="w-full min-w-0 xl:w-[33%] xl:flex-1">
             <div class="p-6 bg-gray-800 rounded-lg shadow h-full overflow-y-auto border border-gray-700">
                 <h3 class="text-gray-100 text-lg font-medium mb-4">Fotos de Servicios</h3>
                 <!-- Header azul con identificador -->
@@ -441,7 +441,7 @@
     {{-- //============================================================================================================================================================================== --}}
     <!-- Modal de Selección de Usuario -->
     @if ($showModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="app-modal service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-full max-h-[90vh] overflow-y-auto">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex items-center justify-between">
@@ -454,7 +454,7 @@
                                 {{ $modalParam4 ?? '' }},
                             </div>
                         </h3>
-                        <button wire:click="closeModal" class="text-gray-400 hover:text-white transition-colors">
+                        <button wire:click="closeModal" class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700">
                             <x-lucide name="x" class="w-6 h-6" />
                         </button>
                     </div>
@@ -496,8 +496,8 @@
                     </div>
                     <!-- Tabla de usuarios -->
                     <div class="bg-gray-700 rounded-3xl overflow-hidden border border-gray-600">
-                        <div class="overflow-x-auto">
-                            <table class="w-full rounded-3xl overflow-hidden">
+                        <div class="min-w-0 w-full max-w-full">
+                            <table class="responsive-table w-full rounded-3xl overflow-hidden">
                                 <thead class="bg-gray-600">
                                     <tr>
                                         <th
@@ -539,31 +539,31 @@
                                         {{-- para que el el regitro del modal pueda funciona es obligatori usar el wire:key --}}
                                         <tr wire:key="user-{{ $user->id }}"
                                             class="hover:bg-gray-600 transition-colors">
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Nombre" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 <div class="font-medium text-white text-xs">{{ $user->name }}</div>
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="RFC" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->rfc ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Posición" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->position ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Dirección" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->direction ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Sexo" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->sex ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Tipo" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->tipo ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs text-gray-300">
+                                            <td data-label="Nivel" class="px-4 py-4 whitespace-normal text-xs text-gray-300">
                                                 {{ $user->lvl ?? 'N/A' }}
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-xs font-medium">
+                                            <td data-label="Acciones" class="px-4 py-4 whitespace-normal text-xs font-medium">
                                                 <button
                                                     wire:click="selectUser({{ $user->id }}, @js($user->name))"
-                                                    class="text-blue-400 hover:text-blue-300 transition-colors"
+                                                    class="modal-action bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                                                     title="Seleccionar">
                                                     <i class="ri-shield-user-line"></i>
                                                 </button>
@@ -586,7 +586,7 @@
                     <!-- Botones del modal -->
                     <div class="flex justify-end gap-3 pt-4 border-t border-gray-700 mt-4">
                         <button type="button" wire:click="closeModal"
-                            class="px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+                            class="modal-action text-white px-4 py-2  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
                             Cancelar
                         </button>
                     </div>
@@ -598,7 +598,7 @@
     {{-- //============================================================================================================================================================================== --}}
     {{-- ========================================================================================================================================================================================================= --}}
     @if ($showInventoryModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="app-modal service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-7xl max-h-[90vh] overflow-y-auto">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex items-center justify-between">
@@ -614,7 +614,7 @@
                             </div>
                         </h3>
                         <button wire:click="closeInventoryModal"
-                            class="text-gray-400 hover:text-white transition-colors">
+                            class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700">
                             <x-lucide name="x" class="w-6 h-6" />
                         </button>
                     </div>
@@ -622,7 +622,7 @@
                 <div class="p-6">
                     <!-- Campos de búsqueda para inventario -->
                     <div class="mb-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-300 mb-2">
                                     Buscar por NI
@@ -672,8 +672,8 @@
                     </div>
                     <!-- Tabla de inventarios -->
                     <div class="bg-gray-700 rounded-3xl overflow-hidden border border-gray-600">
-                        <div class="overflow-x-auto">
-                            <table class="w-full rounded-3xl overflow-hidden">
+                        <div class="min-w-0 w-full max-w-full">
+                            <table class="responsive-table w-full rounded-3xl overflow-hidden">
                                 <thead class="bg-gray-600">
                                     <tr>
                                         <th
@@ -697,7 +697,7 @@
                                     @forelse($filteredInventories as $inv)
                                         <tr wire:key="inv-{{ $inv->id }}"
                                             class="hover:bg-gray-600 transition-colors">
-                                            <td class="px-4 py-4 whitespace-nowrap text-[11px] text-gray-300">
+                                            <td data-label="NI / SN" class="px-4 py-4 whitespace-normal text-[11px] text-gray-300">
                                                 <div class="flex flex-col space-y-1">
                                                     <div><span class="text-blue-400 font-medium">NI:</span>
                                                         {{ $inv->ni ?? 'N/A' }}</div>
@@ -705,11 +705,11 @@
                                                         {{ $inv->ns ?? 'N/A' }}</div>
                                                 </div>
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-[11px] text-gray-300">
+                                            <td data-label="TYPE" class="px-4 py-4 whitespace-normal text-[11px] text-gray-300">
                                                 {{ $inv->type ?? 'N/A' }}</td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-[11px] text-gray-300">
+                                            <td data-label="ARTICULO" class="px-4 py-4 whitespace-normal text-[11px] text-gray-300">
                                                 {{ $inv->articulo ?? 'N/A' }}</td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-[11px] text-gray-300">
+                                            <td data-label="USUARIO / DIRECCIÓN" class="px-4 py-4 whitespace-normal text-[11px] text-gray-300">
                                                 @if ($inv->assignedUser)
                                                     <div class="flex flex-col space-y-1">
                                                         <div><span class="text-blue-400 font-medium">Usuario:</span>
@@ -739,9 +739,9 @@
                                                     </div>
                                                 @endif
                                             </td>
-                                            <td class="px-4 py-4 whitespace-nowrap text-[11px] font-medium">
+                                            <td data-label="Acciones" class="px-4 py-4 whitespace-normal text-[11px] font-medium">
                                                 <button wire:click="selectInventory({{ $inv->id }})"
-                                                    class="text-green-400 hover:text-green-300 transition-colors"
+                                                    class="modal-action bg-green-600 text-white hover:bg-green-700 transition-colors"
                                                     title="Seleccionar">
                                                     <i class="ri-invision-line"></i>
                                                 </button>
@@ -764,7 +764,7 @@
                     <!-- Botones del modal -->
                     <div class="flex justify-end gap-3 pt-4 border-t border-gray-700 mt-4">
                         <button type="button" wire:click="closeInventoryModal"
-                            class="px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+                            class="modal-action text-white px-4 py-2  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
                             Cancelar
                         </button>
                     </div>
@@ -777,7 +777,7 @@
 
     <!-- Modal para agregar/editar fotos -->
     @if ($showPhotoForm)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="app-modal service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-md">
                 <div class="p-6 border-b border-gray-700">
                     <div class="flex items-center justify-between">
@@ -792,7 +792,7 @@
                             @if ($editingPhotoIndex !== null) wire:click="cancelPhotoDescriptionEdit"
                             @else
                                 wire:click="closePhotoForm" @endif
-                            class="text-gray-400 hover:text-white transition-colors">
+                            class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700">
                             <x-lucide name="x" class="w-6 h-6" />
                         </button>
                     </div>
@@ -823,11 +823,11 @@
                         </div>
                         <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
                             <button type="button" wire:click="cancelPhotoDescriptionEdit"
-                                class="px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+                                class="modal-action text-white px-4 py-2  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
                                 Cancelar
                             </button>
                             <button type="button" wire:click="savePhotoDescriptionEdit"
-                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2">
+                                class="modal-action text-white px-4 py-2 bg-green-600 hover:bg-green-700  rounded-lg transition-colors flex items-center gap-2">
                                 <x-lucide name="save" class="w-4 h-4" />
                                 Guardar
                             </button>
@@ -862,11 +862,11 @@
                         @endif
                         <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
                             <button type="button" wire:click="closePhotoForm"
-                                class="px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
+                                class="modal-action text-white px-4 py-2  bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">
                                 Cancelar
                             </button>
                             <button type="button" wire:click="addPhoto"
-                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2">
+                                class="modal-action text-white px-4 py-2 bg-green-600 hover:bg-green-700  rounded-lg transition-colors flex items-center gap-2">
                                 <x-lucide name="plus" class="w-4 h-4" />
                                 Agregar Foto
                             </button>
@@ -879,7 +879,7 @@
 
     <!-- Modal para seleccionar inventarios para asociar al servicio -->
     @if ($showInventorySelection)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="app-modal service-modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-5xl max-h-[80vh] overflow-y-auto">
                 <div class="p-4 border-b border-gray-700">
                     <div class="flex items-center justify-between">
@@ -887,7 +887,7 @@
                             Seleccionar Inventarios
                         </h3>
                         <button wire:click="closeInventorySelection"
-                            class="text-gray-400 hover:text-white transition-colors">
+                            class="modal-action text-white transition-colors bg-gray-600 hover:bg-gray-700">
                             <x-lucide name="x" class="w-5 h-5" />
                         </button>
                     </div>
@@ -895,7 +895,7 @@
                 <div class="p-4">
                     <!-- Campos de búsqueda para inventario -->
                     <div class="mb-3">
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2">
                             <div>
                                 <label class="block text-xs font-medium text-gray-300 mb-1">
                                     Buscar por NI
@@ -942,8 +942,8 @@
                     </div>
 
                     <!-- Tabla de inventarios -->
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-600">
+                    <div class="min-w-0 w-full max-w-full">
+                        <table class="responsive-table w-full divide-y divide-gray-600">
                             <thead class="bg-gray-700">
                                 <tr>
                                     <th class="px-2 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
@@ -966,30 +966,30 @@
                             <tbody class="bg-gray-800 divide-y divide-gray-600">
                                 @forelse ($filteredInventories as $inv)
                                     <tr class="hover:bg-gray-700 transition-colors">
-                                        <td class="px-2 py-2 whitespace-nowrap text-xs text-white">
+                                        <td data-label="NI / Seleccionar" class="px-2 py-2 whitespace-normal text-xs text-white">
                                             <div class="flex items-center gap-2">
                                                 <span>{{ $inv->ni ?? 'N/A' }}</span>
                                                 @if(in_array($inv->id, $selectedInventories))
                                                     <span class="text-green-400 text-xs font-bold">✓ Seleccionado</span>
                                                 @else
                                                     <button wire:click="addInventoryToService({{ $inv->id }})"
-                                                        class="bg-blue-500 text-black px-2 py-1 rounded text-xs font-bold hover:bg-blue-600 transition-colors flex items-center justify-center"
+                                                        class="modal-action bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-blue-600 transition-colors flex items-center justify-center"
                                                         title="Agregar al servicio">
                                                         <x-lucide name="plus" class="w-3 h-3 text-black" />
                                                     </button>
                                                 @endif
                                             </div>
                                         </td>
-                                        <td class="px-2 py-2 whitespace-nowrap text-xs text-white">
+                                        <td data-label="SN" class="px-2 py-2 whitespace-normal text-xs text-white">
                                             {{ $inv->ns ?? 'N/A' }}
                                         </td>
-                                        <td class="px-2 py-2 whitespace-nowrap text-xs text-white">
+                                        <td data-label="Artículo" class="px-2 py-2 whitespace-normal text-xs text-white">
                                             {{ $inv->articulo ?? 'N/A' }}
                                         </td>
-                                        <td class="px-2 py-2 whitespace-nowrap text-xs text-white">
+                                        <td data-label="Marca/Modelo" class="px-2 py-2 whitespace-normal text-xs text-white">
                                             {{ $inv->marca ?? 'N/A' }} / {{ $inv->modelo ?? 'N/A' }}
                                         </td>
-                                        <td class="px-2 py-2 whitespace-nowrap text-xs text-white">
+                                        <td data-label="Usuario" class="px-2 py-2 whitespace-normal text-xs text-white">
                                             @if ($inv->assignedUser)
                                                 <div class="space-y-1">
                                                     <div><span class="text-blue-400 font-medium">Usuario:</span>
@@ -1023,7 +1023,7 @@
                     <!-- Botones del modal -->
                     <div class="flex justify-end gap-3 pt-3 border-t border-gray-700 mt-3">
                         <button type="button" wire:click="closeInventorySelection"
-                            class="px-3 py-1 text-xs text-gray-300 bg-gray-700 hover:bg-gray-600 rounded transition-colors">
+                            class="modal-action text-white px-3 py-1 text-xs  bg-gray-700 hover:bg-gray-600 rounded transition-colors">
                             Cerrar
                         </button>
                     </div>

@@ -71,7 +71,7 @@
     @endif
 
     <!-- Botones de acción móviles -->
-    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+    <div class="flex flex-wrap gap-2 mb-4 min-w-0 max-w-full w-full pb-2">
         <a href="{{ route('inventory.user-inv') }}"
             class="flex-shrink-0 px-4 py-2 bg-purple-600 text-white rounded-lg text-sm font-medium">
             👥 Usuarios
@@ -167,12 +167,12 @@
 
     <!-- Modal de reportes -->
     @if($showReportModal)
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
+        <div class="app-modal fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
             <div class="bg-gray-800 rounded-t-lg sm:rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
                 <div class="p-4 border-b border-gray-700">
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg font-semibold text-white">📊 Generar reporte</h3>
-                        <button wire:click="closeReportModal" class="text-gray-400 hover:text-white">
+                        <button wire:click="closeReportModal" class="modal-action text-white bg-gray-600 hover:bg-gray-700">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
@@ -226,10 +226,10 @@
                     </div>
 
                     <div class="flex gap-2 pt-4">
-                        <button wire:click="generateReport" class="flex-1 px-4 py-2 bg-green-600 text-white rounded font-medium">
+                        <button wire:click="generateReport" class="modal-action text-white flex-1 px-4 py-2 bg-green-600  rounded font-medium">
                             📄 Generar PDF
                         </button>
-                        <button wire:click="closeReportModal" class="flex-1 px-4 py-2 bg-gray-600 text-white rounded font-medium">
+                        <button wire:click="closeReportModal" class="modal-action text-white flex-1 px-4 py-2 bg-gray-600  rounded font-medium">
                             Cancelar
                         </button>
                     </div>

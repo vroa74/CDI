@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="w-full bg-gray-800 border-b border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="w-full px-4 sm:px-6 lg:px-8">
-        <div class="flex h-16 items-center justify-between">
+        <div class="flex min-h-16 items-center justify-between py-2">
             <!-- Logo -->
             <div class="flex shrink-0 items-center">
                 <a href="{{ route('dashboard') }}">
@@ -10,8 +10,8 @@
             </div>
 
             <!-- Navigation Links -->
-            <div class="hidden flex-1 items-center justify-center sm:flex">
-                <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-2">
+            <div class="hidden flex-1 items-center justify-center xl:flex">
+                <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
                     <x-nav-link class="px-2" href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         <i class="ri-dashboard-fill"></i> {{ __('Dashboard') }}
                     </x-nav-link>
@@ -48,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden xl:flex xl:items-center xl:ms-6">
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
@@ -157,8 +157,8 @@
             </div>
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-gray-300 transition duration-150 ease-in-out">
+            <div class="-me-2 flex items-center xl:hidden">
+                <button aria-label="Abrir o cerrar men?" :aria-expanded="open" @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-gray-300 transition duration-150 ease-in-out">
                     <svg x-show="!open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -171,7 +171,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="sm:hidden">
+    <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain xl:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 <i class="ri-dashboard-fill"></i> {{ __('Dashboard') }}
@@ -190,9 +190,7 @@
             <x-responsive-nav-link href="{{ route('cartasresponsivas.index') }}" :active="request()->routeIs('cartasresponsivas.index')">
                 <i class="ri-list-settings-line"></i>  {{ __('Gestión de Cartas Responsivas') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('reportes-incidentes.index') }}" :active="request()->routeIs('reportes-incidentes.*')">
-                <i class="ri-wifi-fill"></i>  {{ __('Reportes de Red') }}
-            </x-responsive-nav-link>
+            <x-network-reports-mobile-menu />
         </div>
 
         <!-- Responsive Settings Options -->

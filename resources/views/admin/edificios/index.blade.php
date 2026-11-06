@@ -31,15 +31,15 @@
                     <input name="search" value="{{ request('search') }}" type="search" placeholder="Buscar por nombre o dirección..." class="w-full rounded-lg border-gray-700 bg-gray-900 text-white placeholder-gray-500 focus:border-blue-500 focus:ring-blue-500">
                 </form>
 
-                <div class="mt-5 overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-700">
+                <div class="mt-5 min-w-0 max-w-full w-full">
+                    <table class="responsive-table w-full divide-y divide-gray-700">
                         <thead><tr class="text-left text-xs uppercase tracking-wider text-gray-400"><th class="px-4 py-3">Nombre</th><th class="px-4 py-3">Dirección</th><th class="px-4 py-3 text-right">Acciones</th></tr></thead>
                         <tbody class="divide-y divide-gray-700 text-sm text-gray-200">
                             @forelse ($edificios as $edificio)
                                 <tr class="hover:bg-gray-700/40">
-                                    <td class="px-4 py-3 font-medium text-white">{{ $edificio->nombre }}</td>
-                                    <td class="px-4 py-3">{{ $edificio->direccion ?: 'Sin dirección' }}</td>
-                                    <td class="px-4 py-3 text-right">
+                                    <td data-label="Nombre" class="px-4 py-3 font-medium text-white">{{ $edificio->nombre }}</td>
+                                    <td data-label="Dirección" class="px-4 py-3">{{ $edificio->direccion ?: 'Sin dirección' }}</td>
+                                    <td data-label="Acciones" class="px-4 py-3 text-right">
                                         <a href="{{ route('edificios.edit', $edificio) }}" class="mr-3 text-blue-400 hover:text-blue-300" title="Editar"><x-lucide name="pencil" class="inline h-4 w-4" /></a>
                                         <form method="POST" action="{{ route('edificios.destroy', $edificio) }}" class="inline" onsubmit="return confirm('¿Deseas eliminar este edificio?')">
                                             @csrf

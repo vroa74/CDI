@@ -10,8 +10,8 @@
                 </svg>
             </button>
             <div class="p-2">
-                <div class="overflow-x-auto rounded-3xl">
-                    <table class="min-w-full border-separate border-spacing-4 bg-transparent table-fixed">
+                <div class="min-w-0 max-w-full w-full rounded-3xl">
+                    <table class="filter-table w-full border-separate border-spacing-4 bg-transparent table-fixed">
                         <tbody>
                             <tr>
                                 <td class="w-1/6 h-16 bg-gray-900 border-2 border-pink-400 rounded-3xl text-center align-middle text-pink-300 p-0">
@@ -41,15 +41,15 @@
         </div>
     </div>
     <!-- Contenedor de las dos tablas lado a lado -->
-    <div class="flex gap-4">
+    <div class="flex flex-col xl:flex-row gap-4">
         <!-- Tabla de Usuarios (25% del ancho) -->
-        <div class="w-1/4 flex flex-col">
+        <div class="w-full xl:w-1/4 flex flex-col">
             <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-700 flex flex-col flex-1">
                 <div class="px-4 py-3 bg-gray-700 border-b border-gray-600">
                     <h3 class="text-lg font-medium text-white">Usuarios</h3>
                 </div>
                 <div class="flex-1 overflow-y-auto">
-                    <table class="min-w-full border-2 border-gray-700 rounded-3xl">
+                    <table class="responsive-table w-full border-2 border-gray-700 rounded-3xl">
                         <thead class="bg-gray-700/50 sticky top-0">
                             <tr class="rounded-3xl border-2 border-gray-700">
                                 <th class="px-3 py-2 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
@@ -59,8 +59,8 @@
                         <tbody class="bg-gray-800 divide-y divide-gray-700">
                             @forelse($users as $user)
                                 <tr class="hover:bg-gray-700 transition-colors cursor-pointer">
-                                    <td class="px-3 py-2 text-sm text-gray-300">{{ $user->id }}</td>
-                                    <td class="px-3 py-2 text-sm text-white font-medium">
+                                    <td data-label="ID" class="px-3 py-2 text-sm text-gray-300">{{ $user->id }}</td>
+                                    <td data-label="Nombre" class="px-3 py-2 text-sm text-white font-medium">
                                         {{ $user->name }}
                                         <div class="text-xs text-yellow-300">{{ $user->position ?? 'Sin cargo' }}</div>
                                         <div class="text-xs text-cyan-300">{{ $user->direction ?? 'Sin dirección' }}</div>
@@ -85,15 +85,15 @@
             </div>
         </div>
         <!-- Tabla de Inventario (75% del ancho) -->
-        <div class="w-3/4 flex flex-col">
+        <div class="w-full xl:w-3/4 flex flex-col">
             <div class="bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-700 flex flex-col flex-1">
                 <div class="px-4 py-3 bg-gray-700 border-b border-gray-600">
                     <h3 class="text-lg font-medium text-white">
                         Inventario
                     </h3>
                 </div>
-                <div class="overflow-x-auto flex-1">
-                    <table class="min-w-full">
+                <div class="min-w-0 max-w-full w-full flex-1">
+                    <table class="responsive-table w-full">
                         <thead class="bg-gray-700/50 sticky top-0">
                             <tr>
                                 <th class="px-3 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Artículo</th>
@@ -107,7 +107,7 @@
                         <tbody class="bg-gray-800 divide-y divide-gray-700">
                             @forelse($inventories as $item)
                                 <tr class="hover:bg-gray-700 transition-colors">
-                                    <td class="px-3 py-4 text-sm text-gray-300">
+                                    <td data-label="Artículo" class="px-3 py-4 text-sm text-gray-300">
                                         <div class="font-medium text-white"> id:{{ $item->id ?? 'N/A' }}</div>
                                         <div class="font-medium text-white">{{ $item->articulo ?? 'N/A' }}</div>
                                         <div class="text-xs text-gray-400">NI: {{ $item->ni ?? 'N/A' }}</div>
@@ -117,7 +117,7 @@
                                             <div><span class="font-semibold text-gray-400">Modelo:</span> {{ $item->modelo ?? 'N/A' }}</div>
                                         </div>
                                     </td>
-                                    <td class="px-3 py-4 text-sm text-gray-300">
+                                    <td data-label="Detalles" class="px-3 py-4 text-sm text-gray-300">
                                         <div class="space-y-2">
                                             @if($item->assignedUser && is_object($item->assignedUser))
                                                 <div>
@@ -139,7 +139,7 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="px-3 py-4 text-sm text-gray-300">
+                                    <td data-label="Resguardante" class="px-3 py-4 text-sm text-gray-300">
                                         <div class="font-medium text-white">
                                             @if($item->responsible && is_object($item->responsible))
                                                 {{ $item->responsible->name }}
@@ -149,10 +149,10 @@
                                         </div>
                                         <div class="text-xs text-gray-400">{{ $item->cargo ?? 'Sin cargo' }}</div>
                                     </td>
-                                    <td class="px-3 py-4 text-sm text-gray-300">
+                                    <td data-label="Ubicación" class="px-3 py-4 text-sm text-gray-300">
                                         <div class="font-medium text-white">{{ $item->dir ?? 'N/A' }}</div>
                                     </td>
-                                    <td class="px-3 py-4 text-center">                                      
+                                    <td data-label="Tipo" class="px-3 py-4 text-center">
                                         @if($item->is_pc)
                                             <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 PC
@@ -163,7 +163,7 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-3 py-4 text-sm">
+                                    <td data-label="Estado" class="px-3 py-4 text-sm">
                                         @if($item->status)
                                             <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Activo
